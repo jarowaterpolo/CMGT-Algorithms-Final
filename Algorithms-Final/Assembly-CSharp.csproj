@@ -66,6 +66,7 @@
     <Compile Include="Assets\DungeonGenerator.cs" />
     <Compile Include="Assets\DebugDrawingExtension\DebugExtension.cs" />
     <Compile Include="Assets\Scripts\AlgorithmsUtils.cs" />
+    <Compile Include="Assets\NewDungeonGenerator1.cs" />
     <Compile Include="Assets\Scripts\HelloDebugDrawing.cs" />
   </ItemGroup>
   <ItemGroup>
