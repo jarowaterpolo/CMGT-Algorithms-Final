@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{49F5B6DB-D033-1448-8D8C-A2E3BAC1BD2A}</ProjectGuid>
+    <ProjectGuid>{8809F512-AFFB-64CE-53D4-97F0258F1A9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -1151,15 +1151,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="NaughtyAttributes.Test.csproj">
-      <Project>{D7D93CC2-634B-6E82-A3D4-03DDB693DAFA}</Project>
+      <Project>{5A3DD264-CBAE-2B7A-4E6B-3089A3181454}</Project>
       <Name>NaughtyAttributes.Test</Name>
     </ProjectReference>
     <ProjectReference Include="NaughtyAttributes.Core.csproj">
-      <Project>{CBF0FD0A-BC94-2389-D3E2-5919F26B830A}</Project>
+      <Project>{425C9837-17AB-3970-073E-67A7AE41BCA2}</Project>
       <Name>NaughtyAttributes.Core</Name>
     </ProjectReference>
     <ProjectReference Include="NaughtyAttributes.Editor.csproj">
-      <Project>{1CA710E5-7C05-02C9-996C-B2E828EA89AF}</Project>
+      <Project>{DCA28305-8776-1DF7-82B3-84FEB4D40EA6}</Project>
       <Name>NaughtyAttributes.Editor</Name>
     </ProjectReference>
   </ItemGroup>
