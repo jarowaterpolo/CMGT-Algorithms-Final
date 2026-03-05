@@ -333,7 +333,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082379047}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e07886076e493c4599b24e35bfb1d95, type: 3}
   m_Name: 
@@ -393,7 +393,6 @@ MonoBehaviour:
     height: 64
   ToDoRooms: []
   DoneRooms: []
-  OverlappingRooms: []
   Overlaps: []
   Doors: []
   minRoomSize:
@@ -405,7 +404,7 @@ MonoBehaviour:
   roomIndex: 0
   N: 0
   SplitDelay: 0.2
-  Overlap: 2
+  Overlap: 1
   splitType: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}

@@ -7,13 +7,8 @@ public class NewDungeonGenerator : MonoBehaviour
     //public RectInt StartRoom;
     public List<RectInt> rooms;
 
-    [SerializeField]
     private List<RectInt> ToDoRooms = new();
-    [SerializeField]
     private List<RectInt> DoneRooms = new();
-    [SerializeField]
-    private List<RectInt> OverlappingRooms = new();
-    [SerializeField]
     private List<RectInt> Overlaps = new();
     [SerializeField]
     private List<RectInt> Doors = new();
@@ -27,8 +22,6 @@ public class NewDungeonGenerator : MonoBehaviour
 
     public int N;
     public float SplitDelay = 0.2f;
-
-    public int Overlap = 2;
 
     public enum SplitType
     {
@@ -113,8 +106,9 @@ public class NewDungeonGenerator : MonoBehaviour
                 //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
 
-                newRoom.height = CurrentRoom.height - random;
-                newRoom.y = newRoom.y + random;
+                //testing for Overlap!!
+                newRoom.height = CurrentRoom.height - random + 1;
+                newRoom.y = newRoom.y + random - 1;
 
                 //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
@@ -128,8 +122,9 @@ public class NewDungeonGenerator : MonoBehaviour
                 //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
 
-                newRoom.width = CurrentRoom.width - random;
-                newRoom.x = newRoom.x + random;
+                //testing for Overlap!!
+                newRoom.width = CurrentRoom.width - random + 1;
+                newRoom.x = newRoom.x + random - 1;
 
                 //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
@@ -170,31 +165,21 @@ public class NewDungeonGenerator : MonoBehaviour
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public void GetOverlaps()
     {
-        OverlappingRooms.Clear();
-
-        for (int i = 0; i < DoneRooms.Count; i++)
-        {
-            var room = DoneRooms[i];
-            room.width += Overlap;
-            room.height += Overlap;
-            room.x -= Overlap / 2;
-            room.y -= Overlap / 2;
-            OverlappingRooms.Add(room);
-        }
-
         Overlaps.Clear();
 
         //Getting Overlaps
-        for (int i = 0; i < OverlappingRooms.Count; i++)
+        for (int i = 0; i < DoneRooms.Count; i++)
         {
-            for (int j = 0; j < OverlappingRooms.Count; j++)
+            for (int j = i + 1; j < DoneRooms.Count; j++)
             {
-                if (i == j) continue;
-                if (i < j) continue;
-                var OverlapedSpace = AlgorithmsUtils.Intersect(OverlappingRooms[i], OverlappingRooms[j]);
-                if (OverlapedSpace != RectInt.zero && OverlapedSpace.width >= Overlap && OverlapedSpace.height >= Overlap)
+                var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
+
+                if (OverlapedSpace != RectInt.zero && OverlapedSpace.width >= 1 && OverlapedSpace.height >= 1)
                 {
-                    Overlaps.Add(OverlapedSpace);
+                    if (OverlapedSpace.width >= 5 || OverlapedSpace.height >= 5)
+                    {
+                        Overlaps.Add(OverlapedSpace);
+                    }
                 }
             }
 
@@ -204,30 +189,29 @@ public class NewDungeonGenerator : MonoBehaviour
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public void PlaceDoors()
     {
+        Doors.Clear();
+
         for (int i = 0; i < Overlaps.Count; i++)
         {
             var overlap = Overlaps[i];
-            float Ro = Random.Range(DoorRandomRange[0], DoorRandomRange[1]);
+            float Rx = Random.Range(overlap.x + 2, overlap.x + overlap.width - 2);
+            float Ry = Random.Range(overlap.y + 2, overlap.y + overlap.height - 2);
 
-            if (overlap.width >= Overlap && overlap.height >= Overlap) continue;
+            if (overlap.height == 1)
+                {
+                    overlap.x = (int)Rx;
+                //overlap.x += overlap.width / 2 - 1;
+                overlap.width = 1;
+                }
+                else if (overlap.width == 1)
+                {
+                    overlap.y = (int)Ry;
+                //overlap.y += overlap.height / 2 - 1;
+                overlap.height = 1;
+                }
 
-            if (overlap.height == Overlap)
-            {
-                //overlap.x += (int)Ro;
-                overlap.x += overlap.width / 2;
-                overlap.width = minRoomSize.width / 4;
-            }
-            else if (overlap.width == Overlap)
-            {
-                //overlap.y += (int)Ro;
-                overlap.y += overlap.height / 2;
-                overlap.height /= minRoomSize.height / 4;
-            }
-
-            if (overlap.width >= Overlap && overlap.height >= Overlap)
-            {
                 Doors.Add(overlap);
-            }
+ 
         }
     }
 
