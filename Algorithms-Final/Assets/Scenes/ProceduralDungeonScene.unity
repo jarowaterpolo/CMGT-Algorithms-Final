@@ -386,14 +386,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536f0ec165bc1544b9ff06289261a878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rooms:
+  StartRoom:
   - x: 0
     y: 0
     width: 128
     height: 64
-  ToDoRooms: []
-  DoneRooms: []
-  Overlaps: []
   Doors: []
   minRoomSize:
     x: 0
@@ -404,15 +401,14 @@ MonoBehaviour:
   roomIndex: 0
   N: 0
   SplitDelay: 0.2
-  Overlap: 1
-  splitType: 0
+  splitType: 1
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 0, g: 1, b: 1, a: 1}
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.6859157, b: 0, a: 1}
-  ShowDoneRooms: 0
+  ShowDoneRooms: 1
   DoorRandomRange: {x: 2, y: 7}
 --- !u!1 &1641109709
 GameObject:

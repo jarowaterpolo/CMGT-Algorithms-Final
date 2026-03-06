@@ -45,7 +45,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         for (int i = 0; i < rooms.Count; i++)
         {
-            //AlgorithmsUtils.DebugRectInt(rooms[i], colors[i % 2]);
+            //AlgorithmsUtils.DebugRectInt(StartRoom[i], colors[i % 2]);
         }
 
         for (int i = 0; i < DoneRooms.Count; i++)
@@ -58,7 +58,7 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2]);
-        //foreach (var room in rooms)
+        //foreach (var room in StartRoom)
         //{
         //    AlgorithmsUtils.DebugRectInt(room, colors[N % 2]);
         //}
