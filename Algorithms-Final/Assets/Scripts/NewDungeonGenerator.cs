@@ -11,10 +11,11 @@ public class NewDungeonGenerator : Generator
     public List<RectInt> StartRoom;
 
     private List<RectInt> ToDoRooms = new();
-    private List<RectInt> DoneRooms = new();
+    [HideInInspector]
+    public List<RectInt> DoneRooms = new();
     private List<RectInt> Overlaps = new();
-    [SerializeField]
-    private List<RectInt> Doors = new();
+    //[HideInInspector]
+    public List<RectInt> Doors = new();
 
     private RectInt CurrentRoom;
 
@@ -42,8 +43,10 @@ public class NewDungeonGenerator : Generator
 
     public float DungeonDrawHeight;
 
-    private Graph<Vector3> RoomGraph;
-    private Graph<Vector3> DoorGraph;
+    [HideInInspector]
+    public Graph<Vector3> RoomGraph;
+    [HideInInspector]
+    public Graph<Vector3> DoorGraph;
 
     private void Start()
     {
@@ -113,7 +116,7 @@ public class NewDungeonGenerator : Generator
         DoorGraph.ClearGraph();
 
         //Main --- Generator script testing
-        StartGenerator();
+        DispatchOnStartGenerationEvent();
 
         ToDoRooms.Add(StartRoom[0]);
 
@@ -142,28 +145,10 @@ public class NewDungeonGenerator : Generator
 
         CurrentRoom = new();
 
-        for (int i = 0; i < DoneRooms.Count; i++)
-        {
-            if (splitType != SplitType.Instant) yield return CustomWait();
-            MakeGraphKeysRoom(i);
-        }
-
-        for (int i = 0; i < Doors.Count; i++)
-        {
-            if (splitType != SplitType.Instant) yield return CustomWait();
-            MakeGraphKeysDoor(i);
-        }
-
-        for (int i = 0; i < DoneRooms.Count; i++)
-        {
-            if (splitType != SplitType.Instant) yield return CustomWait();
-            GetGraphEdgesRoom(i);
-        }
-
-        StopGenerating();
+        DispatchOnEndGenerationEvent();
     }
 
-    IEnumerator CustomWait()
+    public IEnumerator CustomWait()
     {
         switch (splitType)
         {
@@ -207,31 +192,6 @@ public class NewDungeonGenerator : Generator
 
         CurrentRoom = overlap;
         Doors.Add(overlap);
-    }
-
-    public void MakeGraphKeysRoom(int i)
-    {
-        Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
-        RoomGraph.AddNode(roomMiddle);
-    }
-
-    public void GetGraphEdgesRoom(int i)
-    {
-        foreach(var door in Doors)
-        {
-            if (AlgorithmsUtils.Intersects(DoneRooms[i], door))
-            {
-                var middleRoom = new Vector3(DoneRooms[i].position.x + DoneRooms[i].width / 2, 0, DoneRooms[i].position.y + DoneRooms[i].height / 2);
-                Vector3 doorMiddle = new(door.x + door.width / 2f, 0, door.y + door.height / 2f);
-                RoomGraph.AddEdge(middleRoom, doorMiddle);
-            }
-        }
-    }
-
-    public void MakeGraphKeysDoor(int i)
-    {
-        Vector3 doorMiddle = new(Doors[i].x + Doors[i].width/2f, 0, Doors[i].y + Doors[i].height/2f);
-        DoorGraph.AddNode(doorMiddle);
     }
 
     void DrawAll()
@@ -289,31 +249,4 @@ public class NewDungeonGenerator : Generator
             }
         }
     }
-
-    //public void BFS()
-    //{
-    //    Debug.Log("BFS Started:");
-    //    //Debug.Log("TODO: Print every node in the graph using breadth first order starting from startNode");
-    //    Queue<Vector3> Todo = new();
-    //    HashSet<Vector3> DiscoveredNodes = new();
-    //    Todo.Enqueue(RoomList);
-    //    DiscoveredNodes.Add(startNode);
-
-    //    while (Todo.Count > 0)
-    //    {
-    //        var currentNode = Todo.Dequeue();
-    //        var Neighbors = GetNeighbors(currentNode);
-    //        Debug.Log($"{currentNode}: {string.Join(", ", Neighbors)}");
-
-
-    //        foreach (var neighbor in Neighbors)
-    //        {
-    //            if (DiscoveredNodes.Contains(neighbor)) continue;
-    //            Todo.Enqueue(neighbor);
-    //            DiscoveredNodes.Add(neighbor);
-    //        }
-
-    //    }
-    //}
-
 }

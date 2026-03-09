@@ -1,18 +1,20 @@
+using NaughtyAttributes;
 using System;
 using UnityEngine;
 
 public class Generator : MonoBehaviour
 {
-    public event Action StartGenerating;
-    public event Action EndGenerating;
+    public event Action OnStartGeneration;
+    public event Action OnEndGeneration;
 
-    protected void StartGenerator()
+    protected void DispatchOnStartGenerationEvent()
     {
-        StartGenerating?.Invoke();
+        OnStartGeneration?.Invoke();
     }
 
-    protected void StopGenerating()
+    protected void DispatchOnEndGenerationEvent()
     {
-        EndGenerating?.Invoke();
+        OnEndGeneration?.Invoke();
     }
-}
+
+ }
