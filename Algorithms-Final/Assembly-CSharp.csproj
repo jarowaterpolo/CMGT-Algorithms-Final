@@ -63,12 +63,12 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\DebugDrawingBatcher.cs" />
     <Compile Include="Assets\DebugDrawingExtension\Example\Example.cs" />
-    <Compile Include="Assets\DungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\DungeonGenerator.cs" />
     <Compile Include="Assets\DebugDrawingExtension\DebugExtension.cs" />
     <Compile Include="Assets\Scripts\AlgorithmsUtils.cs" />
-    <Compile Include="Assets\Graph.cs" />
-    <Compile Include="Assets\Generator.cs" />
-    <Compile Include="Assets\NewDungeonGenerator1.cs" />
+    <Compile Include="Assets\Scripts\Generator.cs" />
+    <Compile Include="Assets\Scripts\NewDungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\Graph.cs" />
     <Compile Include="Assets\Scripts\HelloDebugDrawing.cs" />
   </ItemGroup>
   <ItemGroup>

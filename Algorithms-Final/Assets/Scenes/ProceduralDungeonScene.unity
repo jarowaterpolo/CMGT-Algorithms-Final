@@ -401,7 +401,7 @@ MonoBehaviour:
   splitHorizontally: 0
   roomIndex: 0
   N: 0
-  SplitDelay: 0.5
+  SplitDelay: 0.3
   splitType: 1
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
