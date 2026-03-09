@@ -286,24 +286,24 @@ public class NewDungeonGenerator : MonoBehaviour
             }
         }
 
-        //for (int i = 0; i < Doors.Count; i++)
-        //{
-        //    switch (splitType)
-        //    {
-        //        case SplitType.Instant:
-        //            MakeGraphKeysDoor(i);
-        //            break;
-        //        case SplitType.Overtime:
-        //            yield return new WaitForSeconds(SplitDelay);
-        //            MakeGraphKeysDoor(i);
-        //            break;
-        //        case SplitType.Space:
-        //            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-        //            yield return null;
-        //            MakeGraphKeysDoor(i);
-        //            break;
-        //    }
-        //}
+        for (int i = 0; i < Doors.Count; i++)
+        {
+            switch (splitType)
+            {
+                case SplitType.Instant:
+                    MakeGraphKeysDoor(i);
+                    break;
+                case SplitType.Overtime:
+                    yield return new WaitForSeconds(SplitDelay);
+                    MakeGraphKeysDoor(i);
+                    break;
+                case SplitType.Space:
+                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                    yield return null;
+                    MakeGraphKeysDoor(i);
+                    break;
+            }
+        }
 
         for (int i = 0; i < RoomList.Count; i++)
         {
@@ -323,36 +323,6 @@ public class NewDungeonGenerator : MonoBehaviour
                     break;
             }
         }
-
-        //for (int i = 0; i < DoorList.Count; i++)
-        //{
-        //    switch (splitType)
-        //    {
-        //        case SplitType.Instant:
-        //            GetGraphEdgesDoor(i);
-        //            break;
-        //        case SplitType.Overtime:
-        //            yield return new WaitForSeconds(SplitDelay);
-        //            GetGraphEdgesDoor(i);
-        //            break;
-        //        case SplitType.Space:
-        //            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-        //            yield return null;
-        //            GetGraphEdgesDoor(i);
-        //            break;
-        //    }
-        //}
-
-        //foreach (var node in AdjacencyList)
-        //{
-        //    //Debug.Log(node.ToString());
-        //    var EdgeList = node.Value;
-
-        //    foreach (var edge in EdgeList)
-        //    {
-        //        Debug.Log("Node " + node.Key + " connects to " + edge.ToString());
-        //    }
-        //}
     }
 
     //[Space(10)]
@@ -547,20 +517,6 @@ public class NewDungeonGenerator : MonoBehaviour
                 }
             }
         }
-
-
-        //foreach (var fromNode in RoomList.Keys)
-        //{
-        //    foreach (var toNode in DoorList.Keys)
-        //    {
-        //        if (fromNode == toNode) continue;
-        //        Vector3 VectorBetweenNodes = toNode - fromNode;
-        //        //Debug.Log("Vector Between nodes = " + VectorBetweenNodes);
-        //        //Debug.Log("magnitude = " + VectorBetweenNodes.magnitude);
-        //        if (VectorBetweenNodes.magnitude > 15) continue;
-        //        AddEdgeRoom(fromNode, toNode);
-        //    }
-        //}
     }
 
     public void MakeGraphKeysDoor(int i)
@@ -579,23 +535,6 @@ public class NewDungeonGenerator : MonoBehaviour
 
         AddNodeDoor(doorMiddle);
     }
-
-    //public void GetGraphEdgesDoor(int i)
-    //{
-    //    foreach (var fromNode in DoorList.Keys)
-    //    {
-    //        foreach (var toNode in RoomList.Keys)
-    //        {
-    //            if (fromNode == toNode) continue;
-    //            Vector3 VectorBetweenNodes = toNode - fromNode;
-    //            //Debug.Log("Vector Between nodes = " + VectorBetweenNodes);
-    //            //Debug.Log("magnitude = " + VectorBetweenNodes.magnitude);
-    //            if (VectorBetweenNodes.magnitude > 15) continue;
-    //            AddEdgeDoor(fromNode, toNode);
-    //        }
-    //    }
-    //}
-
     public void AddNodeRoom(Vector3 node)
     {
         //Debug.Log("TODO: Implement AddNode logic (add node if it does not already exist)");
@@ -614,12 +553,6 @@ public class NewDungeonGenerator : MonoBehaviour
         //Debug.Log("TODO: Implement AddNode logic (add node if it does not already exist)");
         if (DoorList.ContainsKey(node)) return;
         DoorList.Add(node, new());
-    }
-
-    public void AddEdgeDoor(Vector3 fromNode, Vector3 toNode)
-    {
-        //Debug.Log("TODO: Implement AddEdge logic (validate nodes and connect them)");
-        DoorList[fromNode].Add(toNode);
     }
 
 }
