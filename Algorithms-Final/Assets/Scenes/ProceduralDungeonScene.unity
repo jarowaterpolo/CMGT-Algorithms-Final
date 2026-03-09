@@ -400,8 +400,8 @@ MonoBehaviour:
   splitHorizontally: 0
   roomIndex: 0
   N: 0
-  SplitDelay: 0.2
-  splitType: 1
+  SplitDelay: 0.05
+  splitType: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
@@ -410,6 +410,8 @@ MonoBehaviour:
   - {r: 1, g: 0.6859157, b: 0, a: 1}
   ShowDoneRooms: 1
   DoorRandomRange: {x: 2, y: 7}
+  DoorSize: 2
+  DungeonDrawHeight: 5
 --- !u!1 &1641109709
 GameObject:
   m_ObjectHideFlags: 0
