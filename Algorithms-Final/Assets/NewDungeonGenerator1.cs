@@ -58,15 +58,9 @@ public class NewDungeonGenerator : Generator
     public void SplitRandom()
     {
         int random;
-        //yield return null;
-
         RectInt newRoom = ToDoRooms[roomIndex];
-
         ToDoRooms.Remove(ToDoRooms[roomIndex]);
-
         CurrentRoom = newRoom;
-
-        //Debug.Log("INPUT Room = " + CurrentRoom);
 
         if (newRoom.width <= minRoomSize.width * 2 && newRoom.height <= minRoomSize.height * 2)
         {
@@ -82,37 +76,26 @@ public class NewDungeonGenerator : Generator
             if (splitHorizontally == false)
             {
                 random = Random.Range(minRoomSize.height, newRoom.height - minRoomSize.height);
-
-                //Debug.Log(minRoomSize.height + "  " + (newRoom.height - minRoomSize.height) + "  " + random);
-
                 newRoom.height = random;
 
-                //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
 
-                //testing for Overlap!!
                 newRoom.height = CurrentRoom.height - random + 1;
                 newRoom.y = newRoom.y + random - 1;
 
-                //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
             }
             else
             {
                 random = Random.Range(minRoomSize.width, newRoom.width - minRoomSize.width);
-
                 newRoom.width = random;
 
-                //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
 
-                //testing for Overlap!!
                 newRoom.width = CurrentRoom.width - random + 1;
                 newRoom.x = newRoom.x + random - 1;
 
-                //Debug.Log("OUTPUT Room = " + newRoom);
                 ToDoRooms.Add(newRoom);
-
                 splitHorizontally = false;
             }
         }
@@ -192,108 +175,6 @@ public class NewDungeonGenerator : Generator
         }
     }
 
-
-    //[Space(10)]
-
-    [Button(enabledMode: EButtonEnableMode.Playmode)]
-    public void SplitRandomRoomManually()
-    {
-        ToDoRooms.Clear();
-        DoneRooms.Clear();
-        Overlaps.Clear();
-        Doors.Clear();
-
-        ToDoRooms.Add(StartRoom[0]);
-
-        while (ToDoRooms.Count > 0)
-        {
-            int random;
-            //yield return null;
-
-            RectInt newRoom = ToDoRooms[roomIndex];
-
-            ToDoRooms.Remove(ToDoRooms[roomIndex]);
-
-            CurrentRoom = newRoom;
-
-            //Debug.Log("INPUT Room = " + CurrentRoom);
-
-            if (newRoom.width <= minRoomSize.width * 2 && newRoom.height <= minRoomSize.height * 2)
-            {
-                DoneRooms.Add(newRoom);
-            }
-            else
-            {
-                if (newRoom.height < minRoomSize.height * 2)
-                {
-                    splitHorizontally = true;
-                }
-
-                if (splitHorizontally == false)
-                {
-                    random = Random.Range(minRoomSize.height, newRoom.height - minRoomSize.height);
-
-                    //Debug.Log(minRoomSize.height + "  " + (newRoom.height - minRoomSize.height) + "  " + random);
-
-                    newRoom.height = random;
-
-                    //Debug.Log("OUTPUT Room = " + newRoom);
-                    ToDoRooms.Add(newRoom);
-
-                    //testing for Overlap!!
-                    newRoom.height = CurrentRoom.height - random + 1;
-                    newRoom.y = newRoom.y + random - 1;
-
-                    //Debug.Log("OUTPUT Room = " + newRoom);
-                    ToDoRooms.Add(newRoom);
-                }
-                else
-                {
-                    random = Random.Range(minRoomSize.width, newRoom.width - minRoomSize.width);
-
-                    newRoom.width = random;
-
-                    //Debug.Log("OUTPUT Room = " + newRoom);
-                    ToDoRooms.Add(newRoom);
-
-                    //testing for Overlap!!
-                    newRoom.width = CurrentRoom.width - random + 1;
-                    newRoom.x = newRoom.x + random - 1;
-
-                    //Debug.Log("OUTPUT Room = " + newRoom);
-                    ToDoRooms.Add(newRoom);
-
-                    splitHorizontally = false;
-                }
-            }
-            CurrentRoom = new RectInt();
-        }
-    }
-
-    [Button(enabledMode: EButtonEnableMode.Playmode)]
-    public void GetOverlapsManually()
-    {
-        Overlaps.Clear();
-        Doors.Clear();
-
-        //Getting Overlaps
-        for (int i = 0; i < DoneRooms.Count; i++)
-        {
-            for (int j = i + 1; j < DoneRooms.Count; j++)
-            {
-                var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
-
-                if (OverlapedSpace != RectInt.zero && OverlapedSpace.width >= 1 && OverlapedSpace.height >= 1)
-                {
-                    if (OverlapedSpace.width >= 5 || OverlapedSpace.height >= 5)
-                    {
-                        Overlaps.Add(OverlapedSpace);
-                    }
-                }
-            }
-
-        }
-    }
     public void GetOverlaps(int i, int j)
     {
         var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
@@ -301,34 +182,6 @@ public class NewDungeonGenerator : Generator
         if (OverlapedSpace.width >= 5 * DoorSize || OverlapedSpace.height >= 5 * DoorSize)
         {
             Overlaps.Add(OverlapedSpace);
-        }
-    }
-
-    [Button(enabledMode: EButtonEnableMode.Playmode)]
-    public void PlaceDoorsManually()
-    {
-        Doors.Clear();
-
-        for (int i = 0; i < Overlaps.Count; i++)
-        {
-            var overlap = Overlaps[i];
-            float Rx = Random.Range(overlap.x + 2, overlap.x + overlap.width - 2);
-            float Ry = Random.Range(overlap.y + 2, overlap.y + overlap.height - 2);
-
-            if (overlap.height == 1)
-                {
-                    overlap.x = (int)Rx;
-                //overlap.x += overlap.width / 2 - 1;
-                overlap.width = 1;
-                }
-                else if (overlap.width == 1)
-                {
-                    overlap.y = (int)Ry;
-                //overlap.y += overlap.height / 2 - 1;
-                overlap.height = 1;
-                }
-
-                Doors.Add(overlap);
         }
     }
 
