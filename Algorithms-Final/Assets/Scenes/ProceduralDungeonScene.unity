@@ -319,6 +319,7 @@ GameObject:
   - component: {fileID: 1082379049}
   - component: {fileID: 1082379048}
   - component: {fileID: 1082379050}
+  - component: {fileID: 1082379051}
   m_Layer: 0
   m_Name: ---Dungeon_Generator--- (1)
   m_TagString: Untagged
@@ -395,8 +396,8 @@ MonoBehaviour:
   minRoomSize:
     x: 0
     y: 0
-    width: 16
-    height: 16
+    width: 32
+    height: 32
   splitHorizontally: 0
   roomIndex: 0
   N: 0
@@ -405,13 +406,25 @@ MonoBehaviour:
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0.73367023, b: 1, a: 1}
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 1, g: 0.6859157, b: 0, a: 1}
   ShowDoneRooms: 1
   DoorRandomRange: {x: 2, y: 7}
   DoorSize: 2
   DungeonDrawHeight: 5
+--- !u!114 &1082379051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61c65b2583f325949bce1810cb2b950e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1641109709
 GameObject:
   m_ObjectHideFlags: 0

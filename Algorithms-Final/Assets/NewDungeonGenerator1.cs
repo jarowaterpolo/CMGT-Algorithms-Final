@@ -1,10 +1,12 @@
 using NaughtyAttributes;
+using NUnit.Framework.Internal.Commands;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-public class NewDungeonGenerator : MonoBehaviour
+using UnityEngine.UIElements;
+public class NewDungeonGenerator : Generator
 {
     public List<RectInt> StartRoom;
 
@@ -40,8 +42,14 @@ public class NewDungeonGenerator : MonoBehaviour
 
     public float DungeonDrawHeight;
 
-    private Dictionary<Vector3, List<Vector3>> RoomList;
-    private Dictionary<Vector3, List<Vector3>> DoorList;
+    private Graph<Vector3> RoomGraph;
+    private Graph<Vector3> DoorGraph;
+
+    private void Start()
+    {
+        RoomGraph = new Graph<Vector3>();
+        DoorGraph = new Graph<Vector3>();
+    }
 
     void Update()
     {
@@ -78,53 +86,24 @@ public class NewDungeonGenerator : MonoBehaviour
             AlgorithmsUtils.DebugRectInt(Doors[i], colors[4], 0, false, DungeonDrawHeight);
         }
 
-        if (RoomList != null && RoomList.Count != 0)
+        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
         {
-            foreach (var node in RoomList)
+            foreach (var node in RoomGraph.GetKeyList())
             {
-                if (node.Key is Vector3 position)
+                DebugExtension.DebugWireSphere(node, colors[2]);
+
+                foreach (var value in RoomGraph.GetNeighbors(node))
                 {
-                    Debug.DrawRay(position, Vector3.up * 10, Color.blue);
+                    Debug.DrawLine(node, value, colors[2]);
                 }
             }
         }
 
-        if (RoomList != null && RoomList.Count != 0)
+        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0) 
         {
-            foreach (var node in RoomList)
+            foreach (var node in DoorGraph.GetKeyList())
             {
-                if (node.Key is Vector3 position)
-                {
-                    foreach (var value in node.Value)
-                    {
-                        Debug.DrawLine(position, value, Color.blue);
-                    }
-                }
-            }
-        }
-
-        if (DoorList != null && DoorList.Count != 0)
-        {
-            foreach (var node in DoorList)
-            {
-                if (node.Key is Vector3 position)
-                {
-                    Debug.DrawRay(position, Vector3.up * 10, Color.blue);
-                }
-            }
-        }
-
-        if (DoorList != null && DoorList.Count != 0)
-        {
-            foreach (var node in DoorList)
-            {
-                if (node.Key is Vector3 position)
-                {
-                    foreach (var value in node.Value)
-                    {
-                        Debug.DrawLine(position, value, Color.blue);
-                    }
-                }
+                DebugExtension.DebugWireSphere(node, colors[2]);
             }
         }
     }
@@ -199,29 +178,16 @@ public class NewDungeonGenerator : MonoBehaviour
         DoneRooms.Clear();
         Overlaps.Clear();
         Doors.Clear();
-        RoomList = new();
-        DoorList = new();
+        RoomGraph.ClearGraph();
+        DoorGraph.ClearGraph();
 
 
         ToDoRooms.Add(StartRoom[0]);
 
         while (ToDoRooms.Count > 0)
         {
-            switch (splitType)
-            {
-                case SplitType.Instant:
-                    SplitRandom();
-                    break;
-                case SplitType.Overtime:
-                    yield return new WaitForSeconds(SplitDelay);
-                    SplitRandom();
-                    break;
-                case SplitType.Space:
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                    yield return null;
-                    SplitRandom();
-                    break;
-            }
+            if (splitType != SplitType.Instant) yield return CustomWait();
+            SplitRandom();
         }
 
         for (int i = 0; i < DoneRooms.Count; i++)
@@ -230,100 +196,50 @@ public class NewDungeonGenerator : MonoBehaviour
             {
                 if (AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).width < 1 && AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).height < 1) continue;
 
-                switch (splitType)
-                {
-                    case SplitType.Instant:
-                        GetOverlaps(i, j);
-                        break;
-                    case SplitType.Overtime:
-                        yield return new WaitForSeconds(SplitDelay);
-                        GetOverlaps(i, j);
-                        break;
-                    case SplitType.Space:
-                        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                        yield return null;
-                        GetOverlaps(i, j);
-                        break;
-                }
+                if (splitType != SplitType.Instant) yield return CustomWait();
+                GetOverlaps(i, j);
             }
         }
 
         for (int i = 0; i < Overlaps.Count; i++)
         {
-            switch (splitType)
-            {
-                case SplitType.Instant:
-                    PlaceDoors(i);
-                    break;
-                case SplitType.Overtime:
-                    yield return new WaitForSeconds(SplitDelay);
-                    PlaceDoors(i);
-                    break;
-                case SplitType.Space:
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                    yield return null;
-                    PlaceDoors(i);
-                    break;
-            }
+            if (splitType != SplitType.Instant) yield return CustomWait();
+            PlaceDoors(i);
         }
 
         for (int i = 0; i < DoneRooms.Count; i++)
         {
-            switch (splitType)
-            {
-                case SplitType.Instant:
-                    MakeGraphKeysRoom(i);
-                    break;
-                case SplitType.Overtime:
-                    yield return new WaitForSeconds(SplitDelay);
-                    MakeGraphKeysRoom(i);
-                    break;
-                case SplitType.Space:
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                    yield return null;
-                    MakeGraphKeysRoom(i);
-                    break;
-            }
+            if (splitType != SplitType.Instant) yield return CustomWait();
+            MakeGraphKeysRoom(i);
         }
 
         for (int i = 0; i < Doors.Count; i++)
         {
-            switch (splitType)
-            {
-                case SplitType.Instant:
-                    MakeGraphKeysDoor(i);
-                    break;
-                case SplitType.Overtime:
-                    yield return new WaitForSeconds(SplitDelay);
-                    MakeGraphKeysDoor(i);
-                    break;
-                case SplitType.Space:
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                    yield return null;
-                    MakeGraphKeysDoor(i);
-                    break;
-            }
+            if (splitType != SplitType.Instant) yield return CustomWait();
+            MakeGraphKeysDoor(i);
         }
 
-        for (int i = 0; i < RoomList.Count; i++)
+        for (int i = 0; i < DoneRooms.Count; i++)
         {
-            switch (splitType)
-            {
-                case SplitType.Instant:
-                    GetGraphEdgesRoom(i);
-                    break;
-                case SplitType.Overtime:
-                    yield return new WaitForSeconds(SplitDelay);
-                    GetGraphEdgesRoom(i);
-                    break;
-                case SplitType.Space:
-                    yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                    yield return null;
-                    GetGraphEdgesRoom(i);
-                    break;
-            }
+            if (splitType != SplitType.Instant) yield return CustomWait();
+            GetGraphEdgesRoom(i);
         }
     }
+
+    IEnumerator CustomWait()
+    {
+        switch (splitType)
+        {
+            case SplitType.Overtime:
+                yield return new WaitForSeconds(SplitDelay);
+                break;
+            case SplitType.Space:
+                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+                yield return null;
+                break;
+        }
+    }
+
 
     //[Space(10)]
 
@@ -487,15 +403,19 @@ public class NewDungeonGenerator : MonoBehaviour
     public void MakeGraphKeysRoom(int i)
     {
             Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
-            AddNodeRoom(roomMiddle);
-            //Debug.Log(roomMiddle);
+            RoomGraph.AddNode(roomMiddle);
     }
 
     public void GetGraphEdgesRoom(int i)
     {
         //Check if the rooms overlap with the doors then add them
-        foreach(var door  in Doors)
+        foreach(var door in Doors)
         {
+            if (i >= DoneRooms.Count)
+            {
+                Debug.Log("i is higher than donerooms i=" + i + " and donerooms.count=" + DoneRooms.Count);
+            }
+
             if (AlgorithmsUtils.Intersects(DoneRooms[i], door))
             {
                 var middleRoom = new Vector3(DoneRooms[i].position.x + DoneRooms[i].width / 2, 0, DoneRooms[i].position.y + DoneRooms[i].height / 2);
@@ -511,48 +431,43 @@ public class NewDungeonGenerator : MonoBehaviour
                     doorMiddle.z += .5f;
                 }
 
-                if (RoomList.ContainsKey(middleRoom))
-                {
-                    AddEdgeRoom(middleRoom, doorMiddle);
-                }
+                RoomGraph.AddEdge(middleRoom, doorMiddle);
+                //Debug.Log("added an edge between " + middleRoom + " and " +  doorMiddle);
+                //Debug.Log(RoomGraph.GetNeighbors(middleRoom));
             }
         }
     }
 
     public void MakeGraphKeysDoor(int i)
     {
-        Vector3 doorMiddle = new(Doors[i].x + Doors[i].width/2, 0, Doors[i].y + Doors[i].height/2);
-
-        if (Doors[i].width == 1)
-        {
-            doorMiddle.x += .5f;
-        }
-
-        if (Doors[i].height == 1)
-        {
-            doorMiddle.z += .5f;
-        }
-
-        AddNodeDoor(doorMiddle);
-    }
-    public void AddNodeRoom(Vector3 node)
-    {
-        //Debug.Log("TODO: Implement AddNode logic (add node if it does not already exist)");
-        if (RoomList.ContainsKey(node)) return;
-        RoomList.Add(node, new());
+        Vector3 doorMiddle = new(Doors[i].x + Doors[i].width/2f, 0, Doors[i].y + Doors[i].height/2f);
+        DoorGraph.AddNode(doorMiddle);
     }
 
-    public void AddEdgeRoom(Vector3 fromNode, Vector3 toNode)
-    {
-        //Debug.Log("TODO: Implement AddEdge logic (validate nodes and connect them)");
-        RoomList[fromNode].Add(toNode);
-    }
+    //public void BFS()
+    //{
+    //    Debug.Log("BFS Started:");
+    //    //Debug.Log("TODO: Print every node in the graph using breadth first order starting from startNode");
+    //    Queue<Vector3> Todo = new();
+    //    HashSet<Vector3> DiscoveredNodes = new();
+    //    Todo.Enqueue(RoomList);
+    //    DiscoveredNodes.Add(startNode);
 
-    public void AddNodeDoor(Vector3 node)
-    {
-        //Debug.Log("TODO: Implement AddNode logic (add node if it does not already exist)");
-        if (DoorList.ContainsKey(node)) return;
-        DoorList.Add(node, new());
-    }
+    //    while (Todo.Count > 0)
+    //    {
+    //        var currentNode = Todo.Dequeue();
+    //        var Neighbors = GetNeighbors(currentNode);
+    //        Debug.Log($"{currentNode}: {string.Join(", ", Neighbors)}");
+
+
+    //        foreach (var neighbor in Neighbors)
+    //        {
+    //            if (DiscoveredNodes.Contains(neighbor)) continue;
+    //            Todo.Enqueue(neighbor);
+    //            DiscoveredNodes.Add(neighbor);
+    //        }
+
+    //    }
+    //}
 
 }
