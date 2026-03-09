@@ -53,59 +53,7 @@ public class NewDungeonGenerator : Generator
 
     void Update()
     {
-        if (ShowDoneRooms)
-        {
-            //Drawing Done Rooms
-            for (int i = 0; i < DoneRooms.Count; i++)
-            {
-                AlgorithmsUtils.DebugRectInt(DoneRooms[i], colors[0], 0, false, DungeonDrawHeight);
-            }
-        }
-
-        //Drawing Not Done Rooms
-        for (int i = 0; i < ToDoRooms.Count; i++)
-        {
-            AlgorithmsUtils.DebugRectInt(ToDoRooms[i], colors[1]);
-        }
-
-        //Drawing Current Room
-        AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2]);
-
-
-        if (Overlaps.Count > 0)
-        {
-            //Drawing Overlaps
-            for (int i = 0; i < Overlaps.Count; i++)
-            {
-                AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, DungeonDrawHeight);
-            }
-        }
-
-        for (int i = 0; i < Doors.Count; i++)
-        {
-            AlgorithmsUtils.DebugRectInt(Doors[i], colors[4], 0, false, DungeonDrawHeight);
-        }
-
-        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
-        {
-            foreach (var node in RoomGraph.GetKeyList())
-            {
-                DebugExtension.DebugWireSphere(node, colors[2]);
-
-                foreach (var value in RoomGraph.GetNeighbors(node))
-                {
-                    Debug.DrawLine(node, value, colors[2]);
-                }
-            }
-        }
-
-        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0) 
-        {
-            foreach (var node in DoorGraph.GetKeyList())
-            {
-                DebugExtension.DebugWireSphere(node, colors[2]);
-            }
-        }
+        DrawAll();
     }
     public void SplitRandom()
     {
@@ -181,6 +129,8 @@ public class NewDungeonGenerator : Generator
         RoomGraph.ClearGraph();
         DoorGraph.ClearGraph();
 
+        //Main --- Generator script testing
+        StartGenerator();
 
         ToDoRooms.Add(StartRoom[0]);
 
@@ -224,6 +174,8 @@ public class NewDungeonGenerator : Generator
             if (splitType != SplitType.Instant) yield return CustomWait();
             GetGraphEdgesRoom(i);
         }
+
+        StopGenerating();
     }
 
     IEnumerator CustomWait()
@@ -402,38 +354,19 @@ public class NewDungeonGenerator : Generator
 
     public void MakeGraphKeysRoom(int i)
     {
-            Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
-            RoomGraph.AddNode(roomMiddle);
+        Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
+        RoomGraph.AddNode(roomMiddle);
     }
 
     public void GetGraphEdgesRoom(int i)
     {
-        //Check if the rooms overlap with the doors then add them
         foreach(var door in Doors)
         {
-            if (i >= DoneRooms.Count)
-            {
-                Debug.Log("i is higher than donerooms i=" + i + " and donerooms.count=" + DoneRooms.Count);
-            }
-
             if (AlgorithmsUtils.Intersects(DoneRooms[i], door))
             {
                 var middleRoom = new Vector3(DoneRooms[i].position.x + DoneRooms[i].width / 2, 0, DoneRooms[i].position.y + DoneRooms[i].height / 2);
-                Vector3 doorMiddle = new(door.x + door.width / 2, 0, door.y + door.height / 2);
-
-                if (door.width == 1)
-                {
-                    doorMiddle.x += .5f;
-                }
-
-                if (door.height == 1)
-                {
-                    doorMiddle.z += .5f;
-                }
-
+                Vector3 doorMiddle = new(door.x + door.width / 2f, 0, door.y + door.height / 2f);
                 RoomGraph.AddEdge(middleRoom, doorMiddle);
-                //Debug.Log("added an edge between " + middleRoom + " and " +  doorMiddle);
-                //Debug.Log(RoomGraph.GetNeighbors(middleRoom));
             }
         }
     }
@@ -442,6 +375,63 @@ public class NewDungeonGenerator : Generator
     {
         Vector3 doorMiddle = new(Doors[i].x + Doors[i].width/2f, 0, Doors[i].y + Doors[i].height/2f);
         DoorGraph.AddNode(doorMiddle);
+    }
+
+    void DrawAll()
+    {
+        if (ShowDoneRooms)
+        {
+            //Drawing Done Rooms
+            for (int i = 0; i < DoneRooms.Count; i++)
+            {
+                AlgorithmsUtils.DebugRectInt(DoneRooms[i], colors[0], 0, false, DungeonDrawHeight);
+            }
+        }
+
+        //Drawing Not Done Rooms
+        for (int i = 0; i < ToDoRooms.Count; i++)
+        {
+            AlgorithmsUtils.DebugRectInt(ToDoRooms[i], colors[1]);
+        }
+
+        //Drawing Current Room
+        AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2]);
+
+
+        if (Overlaps.Count > 0)
+        {
+            //Drawing Overlaps
+            for (int i = 0; i < Overlaps.Count; i++)
+            {
+                AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, DungeonDrawHeight);
+            }
+        }
+
+        for (int i = 0; i < Doors.Count; i++)
+        {
+            AlgorithmsUtils.DebugRectInt(Doors[i], colors[4], 0, false, DungeonDrawHeight);
+        }
+
+        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
+        {
+            foreach (var node in RoomGraph.GetKeyList())
+            {
+                DebugExtension.DebugWireSphere(node, colors[2]);
+
+                foreach (var value in RoomGraph.GetNeighbors(node))
+                {
+                    Debug.DrawLine(node, value, colors[2]);
+                }
+            }
+        }
+
+        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0)
+        {
+            foreach (var node in DoorGraph.GetKeyList())
+            {
+                DebugExtension.DebugWireSphere(node, colors[2]);
+            }
+        }
     }
 
     //public void BFS()
