@@ -99,7 +99,7 @@ public class NewDungeonGenerator : Generator
                 splitHorizontally = false;
             }
         }
-        CurrentRoom = new RectInt();
+        //CurrentRoom = new RectInt();
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
@@ -140,6 +140,8 @@ public class NewDungeonGenerator : Generator
             PlaceDoors(i);
         }
 
+        CurrentRoom = new();
+
         for (int i = 0; i < DoneRooms.Count; i++)
         {
             if (splitType != SplitType.Instant) yield return CustomWait();
@@ -178,6 +180,7 @@ public class NewDungeonGenerator : Generator
     public void GetOverlaps(int i, int j)
     {
         var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
+        CurrentRoom = OverlapedSpace;
 
         if (OverlapedSpace.width >= 5 * DoorSize || OverlapedSpace.height >= 5 * DoorSize)
         {
@@ -202,6 +205,7 @@ public class NewDungeonGenerator : Generator
             overlap.height = 1 * DoorSize;
         }
 
+        CurrentRoom = overlap;
         Doors.Add(overlap);
     }
 
@@ -247,10 +251,6 @@ public class NewDungeonGenerator : Generator
             AlgorithmsUtils.DebugRectInt(ToDoRooms[i], colors[1]);
         }
 
-        //Drawing Current Room
-        AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2]);
-
-
         if (Overlaps.Count > 0)
         {
             //Drawing Overlaps
@@ -264,6 +264,9 @@ public class NewDungeonGenerator : Generator
         {
             AlgorithmsUtils.DebugRectInt(Doors[i], colors[4], 0, false, DungeonDrawHeight);
         }
+
+        //Drawing Current Room
+        AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2], 0, false, DungeonDrawHeight);
 
         if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
         {
