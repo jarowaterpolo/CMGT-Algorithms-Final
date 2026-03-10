@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Graph<T>
@@ -31,7 +33,10 @@ public class Graph<T>
         adjacencyList[fromNode].Add(toNode);
         adjacencyList[toNode].Add(fromNode);
     }
-
+    public T GetFirstKey()
+    {
+        return adjacencyList.Keys.First();
+    }
     public List<T> GetKeyList() 
     {
         return new List<T>(adjacencyList.Keys);

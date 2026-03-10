@@ -1,47 +1,31 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SearchAlgorithms<T>
 {
-    //    private NewDungeonGenerator DungeonGen;
-    //    private GraphGenerator GraphGen;
-    //    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    //    //void Start()
-    //    //{
-    //    //    DungeonGen = GetComponent<NewDungeonGenerator>();
-    //    //    GraphGen = GetComponent<GraphGenerator>();
-    //    //}
+    public void BFS(Graph<T> graph, T StartNode, Action<T> visitAction)
+    {
+        Debug.Log("BFS Started:");
 
-    //    // Update is called once per frame
-    //    void Update()
-    //{
+        Queue<T> ToDo = new();
+        HashSet<T> DiscoveredNodes = new();
 
-    //}
+        ToDo.Enqueue(StartNode);
+        DiscoveredNodes.Add(StartNode);
 
+        while (ToDo.Count > 0)
+        {
+            T currentNode = ToDo.Dequeue();
+            visitAction(currentNode);
 
-    //public void BFS()
-    //{
-    //    Debug.Log("BFS Started:");
-    //    //Debug.Log("TODO: Print every node in the graph using breadth first order starting from startNode");
-    //    Queue<T> Todo = new();
-    //    HashSet<T> DiscoveredNodes = new();
-    //    Todo.Enqueue();
-    //    DiscoveredNodes.Add();
+            foreach (T neighbor in graph.GetNeighbors(currentNode))
+            {
+                if (DiscoveredNodes.Contains(neighbor)) continue;
+                ToDo.Enqueue(neighbor);
+                DiscoveredNodes.Add(neighbor);
+            }
 
-    //    while (Todo.Count > 0)
-    //    {
-    //        var currentNode = Todo.Dequeue();
-    //        var Neighbors = GraphGen.RoomGraph.GetNeighbors(currentNode);
-    //        Debug.Log($"{currentNode}: {string.Join(", ", Neighbors)}");
-
-
-    //        foreach (var neighbor in Neighbors)
-    //        {
-    //            if (DiscoveredNodes.Contains(neighbor)) continue;
-    //            Todo.Enqueue(neighbor);
-    //            DiscoveredNodes.Add(neighbor);
-    //        }
-
-    //    }
-    //}
+        }
+    }
 }

@@ -16,7 +16,6 @@ public class GraphGenerator : Generator
 
     private NewDungeonGenerator DungeonGen;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         DungeonGen = GetComponent<NewDungeonGenerator>();
