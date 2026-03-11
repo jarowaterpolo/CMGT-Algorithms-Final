@@ -25,16 +25,6 @@ public class NewDungeonGenerator : Generator
     public int roomIndex;
 
     public int N;
-    public float SplitDelay = 0.2f;
-
-    public enum SplitType
-    {
-        Instant, Overtime, Space
-    }
-
-    public SplitType splitType;
-
-    public Color[] colors = { Color.green, Color.red, Color.cyan, Color.black, new Color(255,175,0,1)};
 
     public bool ShowDoneRooms = true;
 
@@ -43,15 +33,18 @@ public class NewDungeonGenerator : Generator
 
     public float DungeonDrawHeight;
 
-    [HideInInspector]
-    public Graph<Vector3> RoomGraph;
-    [HideInInspector]
-    public Graph<Vector3> DoorGraph;
+    private SearchDungeon searchDungeon;
+    private RectInt SavedDoor;
 
-    private void Start()
+    public void Start()
     {
-        RoomGraph = new Graph<Vector3>();
-        DoorGraph = new Graph<Vector3>();
+        searchDungeon = GetComponent<SearchDungeon>();
+        searchDungeon.OnEndGeneration += searchDungeon_OnEndSearch;
+    }
+
+    private void searchDungeon_OnEndSearch()
+    {
+        DeleteDoor();
     }
 
     void Update()
@@ -112,8 +105,6 @@ public class NewDungeonGenerator : Generator
         DoneRooms.Clear();
         Overlaps.Clear();
         Doors.Clear();
-        RoomGraph.ClearGraph();
-        DoorGraph.ClearGraph();
 
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
@@ -122,7 +113,7 @@ public class NewDungeonGenerator : Generator
 
         while (ToDoRooms.Count > 0)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             SplitRandom();
         }
 
@@ -132,14 +123,14 @@ public class NewDungeonGenerator : Generator
             {
                 if (AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).width < 1 && AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).height < 1) continue;
 
-                if (splitType != SplitType.Instant) yield return CustomWait();
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
                 GetOverlaps(i, j);
             }
         }
 
         for (int i = 0; i < Overlaps.Count; i++)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             PlaceDoors(i);
         }
 
@@ -147,21 +138,6 @@ public class NewDungeonGenerator : Generator
 
         DispatchOnEndGenerationEvent();
     }
-
-    public IEnumerator CustomWait()
-    {
-        switch (splitType)
-        {
-            case SplitType.Overtime:
-                yield return new WaitForSeconds(SplitDelay);
-                break;
-            case SplitType.Space:
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
-                yield return null;
-                break;
-        }
-    }
-
     public void GetOverlaps(int i, int j)
     {
         var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
@@ -192,6 +168,21 @@ public class NewDungeonGenerator : Generator
 
         CurrentRoom = overlap;
         Doors.Add(overlap);
+    }
+
+    void DeleteDoor()
+    {
+        SavedDoor = Doors[Random.Range(0, Doors.Count)];
+        Doors.Remove(SavedDoor);
+
+        DispatchOnEndGenerationEvent();
+    }
+
+    public void AddDoor()
+    {
+        Doors.Add(SavedDoor);
+
+        DispatchOnEndGenerationEvent();
     }
 
     void DrawAll()
@@ -227,26 +218,5 @@ public class NewDungeonGenerator : Generator
 
         //Drawing Current Room
         AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2], 0, false, DungeonDrawHeight);
-
-        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
-        {
-            foreach (var node in RoomGraph.GetKeyList())
-            {
-                DebugExtension.DebugWireSphere(node, colors[2]);
-
-                foreach (var value in RoomGraph.GetNeighbors(node))
-                {
-                    Debug.DrawLine(node, value, colors[2]);
-                }
-            }
-        }
-
-        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0)
-        {
-            foreach (var node in DoorGraph.GetKeyList())
-            {
-                DebugExtension.DebugWireSphere(node, colors[2]);
-            }
-        }
     }
 }

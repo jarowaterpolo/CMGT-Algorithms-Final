@@ -22,9 +22,29 @@ public class GraphGenerator : Generator
         DoneRooms = DungeonGen.DoneRooms;
         Doors = DungeonGen.Doors;
 
-        RoomGraph = DungeonGen.RoomGraph;
-        DoorGraph = DungeonGen.DoorGraph;
+        RoomGraph = new Graph<Vector3>();
+        DoorGraph = new Graph<Vector3>();
+
+        DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
+        DungeonGen.OnEndGeneration += DungeonGen_OnEndGeneration;
     }
+    void Update()
+    {
+        DrawAll();
+    }
+
+    private void DungeonGen_OnStartGeneration()
+    {
+        RoomGraph.ClearGraph();
+        DoorGraph.ClearGraph();
+    }
+
+    private void DungeonGen_OnEndGeneration()
+    {
+        Debug.Log(" berichtje ontvangen!");
+        StartCoroutine(GenerateGraph());
+    }
+
     public void MakeGraphKeysRoom(int i)
     {
         Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
@@ -56,27 +76,51 @@ public class GraphGenerator : Generator
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
 
-        RoomGraph = DungeonGen.RoomGraph;
-        DoorGraph = DungeonGen.DoorGraph;
+        RoomGraph = new();
+        DoorGraph = new();
 
         for (int i = 0; i < DoneRooms.Count; i++)
         {
-            if (DungeonGen.splitType != NewDungeonGenerator.SplitType.Instant) yield return DungeonGen.CustomWait();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             MakeGraphKeysRoom(i);
         }
 
         for (int i = 0; i < Doors.Count; i++)
         {
-            if (DungeonGen.splitType != NewDungeonGenerator.SplitType.Instant) yield return DungeonGen.CustomWait();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             MakeGraphKeysDoor(i);
         }
 
         for (int i = 0; i < DoneRooms.Count; i++)
         {
-            if (DungeonGen.splitType != NewDungeonGenerator.SplitType.Instant) yield return DungeonGen.CustomWait();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             GetGraphEdgesRoom(i);
         }
 
         DispatchOnEndGenerationEvent();
+    }
+
+    void DrawAll()
+    {
+        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
+        {
+            foreach (var node in RoomGraph.GetKeyList())
+            {
+                DebugExtension.DebugWireSphere(node, colors[2]);
+
+                foreach (var value in RoomGraph.GetNeighbors(node))
+                {
+                    Debug.DrawLine(node, value, colors[2]);
+                }
+            }
+        }
+
+        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0)
+        {
+            foreach (var node in DoorGraph.GetKeyList())
+            {
+                DebugExtension.DebugWireSphere(node, colors[2]);
+            }
+        }
     }
 }

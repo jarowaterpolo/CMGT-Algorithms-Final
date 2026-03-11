@@ -1,10 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SearchAlgorithms<T>
 {
-    public void BFS(Graph<T> graph, T StartNode, Action<T> visitAction)
+    public bool BFS(Graph<T> graph, T StartNode, Action<T> visitAction)
     {
         Debug.Log("BFS Started:");
 
@@ -27,5 +28,8 @@ public class SearchAlgorithms<T>
             }
 
         }
+
+        bool allRoomsReachable = graph.GetKeyList().Count == DiscoveredNodes.Count;
+        return allRoomsReachable;
     }
 }

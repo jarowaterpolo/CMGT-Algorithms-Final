@@ -15,15 +15,25 @@ public class SearchDungeon : Generator
 
     public SearchAlgorithms<Vector3> searchAlgorithm;
 
+    private bool Complete;
+
 
     void Start()
     {
-        DungeonGen = GetComponent<NewDungeonGenerator>();
         GraphGen = GetComponent<GraphGenerator>();
+        DungeonGen = GetComponent<NewDungeonGenerator>();
 
-        RoomGraph = DungeonGen.RoomGraph;
+        RoomGraph = GraphGen.RoomGraph;
 
         searchAlgorithm = new();
+
+        GraphGen.OnEndGeneration += GraphGen_OnEndGeneration;
+    }
+
+    private void GraphGen_OnEndGeneration()
+    {
+        if (Complete) return;
+        StartCoroutine(SearchDungeonGraph());
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
@@ -33,15 +43,27 @@ public class SearchDungeon : Generator
         DispatchOnStartGenerationEvent();
 
         yield return null;
-        RoomGraph = DungeonGen.RoomGraph;
+        RoomGraph = GraphGen.RoomGraph;
         var FirstRoom = RoomGraph.GetFirstKey();
-        Debug.Log(FirstRoom);
 
-        Action<Vector3> printNode = node => Console.WriteLine($"Visited node: {node}");
-        //printNode += node => Debug.DrawRay(node, Vector3.up, Color.black);
+        Action<Vector3> printNode = node => Debug.Log($"Visited node: {node}");
+        printNode += node => Debug.DrawRay(node, Vector3.up * 10, colors[1], 100f);
 
-        searchAlgorithm.BFS(RoomGraph, FirstRoom, printNode);
+        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 100);
 
-        DispatchOnEndGenerationEvent();
+        //searchAlgorithm.BFS(RoomGraph, FirstRoom, printNode);
+
+        var allRoomsReachable = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
+
+        if (allRoomsReachable)
+        {
+            DispatchOnEndGenerationEvent();
+        }
+        else
+        {
+            Debug.Log("not all rooms are reachable");
+            DungeonGen.AddDoor();
+            Complete = true;
+        }
     }
 }
