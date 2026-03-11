@@ -406,14 +406,14 @@ MonoBehaviour:
   minRoomSize:
     x: 0
     y: 0
-    width: 16
-    height: 16
+    width: 8
+    height: 8
   splitHorizontally: 0
   roomIndex: 0
   N: 0
   ShowDoneRooms: 1
   DoorRandomRange: {x: 2, y: 7}
-  DoorSize: 2
+  DoorSize: 1
   DungeonDrawHeight: 5
 --- !u!114 &1082379052
 MonoBehaviour:
@@ -427,8 +427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53f0d6bc6c5fb94cb24c756697e30c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
-  splitDelay: 0.05
+  splitType: 0
+  splitDelay: 0.02
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
@@ -456,6 +456,7 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 255, g: 175, b: 0, a: 1}
   - {r: 0, g: 0.100931406, b: 1, a: 1}
+  RemoveDoorRepeatCount: 100
 --- !u!1 &1641109709
 GameObject:
   m_ObjectHideFlags: 0

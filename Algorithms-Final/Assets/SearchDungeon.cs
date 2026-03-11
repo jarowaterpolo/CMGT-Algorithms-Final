@@ -15,7 +15,11 @@ public class SearchDungeon : Generator
 
     public SearchAlgorithms<Vector3> searchAlgorithm;
 
+    public int RemoveDoorRepeatCount = 10;
+
     private bool Complete;
+
+    private int i;
 
 
     void Start()
@@ -27,6 +31,7 @@ public class SearchDungeon : Generator
 
         searchAlgorithm = new();
 
+        DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
         GraphGen.OnEndGeneration += GraphGen_OnEndGeneration;
     }
 
@@ -35,6 +40,11 @@ public class SearchDungeon : Generator
         if (Complete) return;
         StartCoroutine(SearchDungeonGraph());
     }
+    private void DungeonGen_OnStartGeneration()
+    {
+        Complete = false;
+        i = 0;
+    }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator SearchDungeonGraph()
@@ -42,16 +52,12 @@ public class SearchDungeon : Generator
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
 
-        yield return null;
+        if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+
         RoomGraph = GraphGen.RoomGraph;
         var FirstRoom = RoomGraph.GetFirstKey();
 
-        Action<Vector3> printNode = node => Debug.Log($"Visited node: {node}");
-        printNode += node => Debug.DrawRay(node, Vector3.up * 10, colors[1], 100f);
-
-        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 100);
-
-        //searchAlgorithm.BFS(RoomGraph, FirstRoom, printNode);
+        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
 
         var allRoomsReachable = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
 
@@ -61,9 +67,15 @@ public class SearchDungeon : Generator
         }
         else
         {
-            Debug.Log("not all rooms are reachable");
+            i++;
             DungeonGen.AddDoor();
+            //DungeonGen.AddRoom();
+        }
+
+        if (i >= RemoveDoorRepeatCount)
+        {
             Complete = true;
+            Debug.Log("BFS Finished");
         }
     }
 }

@@ -29,7 +29,7 @@ public class SearchAlgorithms<T>
 
         }
 
-        bool allRoomsReachable = graph.GetKeyList().Count == DiscoveredNodes.Count;
-        return allRoomsReachable;
+        bool allNodesReachable = graph.GetKeyList().Count == DiscoveredNodes.Count;
+        return allNodesReachable;
     }
 }

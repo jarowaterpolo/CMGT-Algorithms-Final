@@ -35,6 +35,7 @@ public class NewDungeonGenerator : Generator
 
     private SearchDungeon searchDungeon;
     private RectInt SavedDoor;
+    private RectInt SavedRoom;
 
     public void Start()
     {
@@ -45,6 +46,7 @@ public class NewDungeonGenerator : Generator
     private void searchDungeon_OnEndSearch()
     {
         DeleteDoor();
+        //DeleteRoom();
     }
 
     void Update()
@@ -181,6 +183,21 @@ public class NewDungeonGenerator : Generator
     public void AddDoor()
     {
         Doors.Add(SavedDoor);
+
+        DispatchOnEndGenerationEvent();
+    }
+
+    void DeleteRoom()
+    {
+        SavedRoom = DoneRooms[Random.Range(0, DoneRooms.Count)];
+        DoneRooms.Remove(SavedRoom);
+
+        DispatchOnEndGenerationEvent();
+    }
+
+    public void AddRoom()
+    {
+        DoneRooms.Add(SavedRoom);
 
         DispatchOnEndGenerationEvent();
     }

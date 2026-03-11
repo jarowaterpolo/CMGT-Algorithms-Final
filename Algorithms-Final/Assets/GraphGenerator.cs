@@ -41,7 +41,6 @@ public class GraphGenerator : Generator
 
     private void DungeonGen_OnEndGeneration()
     {
-        Debug.Log(" berichtje ontvangen!");
         StartCoroutine(GenerateGraph());
     }
 
@@ -96,6 +95,8 @@ public class GraphGenerator : Generator
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             GetGraphEdgesRoom(i);
         }
+
+        yield return null;
 
         DispatchOnEndGenerationEvent();
     }
