@@ -16,6 +16,8 @@ public abstract class Generator : MonoBehaviour
     public float splitDelay = 0.05f;
     public Color[] colors = { Color.green, Color.red, Color.cyan, Color.black, new Color(255, 175, 0, 1), Color.blue };
 
+    public AudioSource audioSource;
+
     //[Space(100)]
 
     protected void DispatchOnStartGenerationEvent()

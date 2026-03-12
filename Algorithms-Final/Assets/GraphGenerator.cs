@@ -16,6 +16,8 @@ public class GraphGenerator : Generator
 
     private NewDungeonGenerator DungeonGen;
 
+    private int j;
+
     void Start()
     {
         DungeonGen = GetComponent<NewDungeonGenerator>();
@@ -37,11 +39,17 @@ public class GraphGenerator : Generator
     {
         RoomGraph.ClearGraph();
         DoorGraph.ClearGraph();
+        j = 0;
     }
 
     private void DungeonGen_OnEndGeneration()
     {
         StartCoroutine(GenerateGraph());
+        if (j < 1)
+        {
+            audioSource.Play();
+        }
+        j++;
     }
 
     public void MakeGraphKeysRoom(int i)

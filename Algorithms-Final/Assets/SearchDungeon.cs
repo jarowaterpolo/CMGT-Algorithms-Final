@@ -17,9 +17,11 @@ public class SearchDungeon : Generator
 
     public int RemoveDoorRepeatCount = 10;
 
+    public AudioSource CompleteSound;
     private bool Complete;
 
     private int i;
+    private int j;
 
 
     void Start()
@@ -34,16 +36,20 @@ public class SearchDungeon : Generator
         DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
         GraphGen.OnEndGeneration += GraphGen_OnEndGeneration;
     }
-
     private void GraphGen_OnEndGeneration()
     {
         if (Complete) return;
+        if (j < 1)
+        {
+            audioSource.Play();
+        }
         StartCoroutine(SearchDungeonGraph());
     }
     private void DungeonGen_OnStartGeneration()
     {
         Complete = false;
         i = 0;
+        j = 0;
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
@@ -51,6 +57,7 @@ public class SearchDungeon : Generator
     {
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
+        j++;
 
         if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
@@ -75,6 +82,7 @@ public class SearchDungeon : Generator
         if (i >= RemoveDoorRepeatCount)
         {
             Complete = true;
+            CompleteSound.Play();
             Debug.Log("BFS Finished");
         }
     }

@@ -110,6 +110,7 @@ public class NewDungeonGenerator : Generator
 
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
+        audioSource.Play();
 
         ToDoRooms.Add(StartRoom[0]);
 
