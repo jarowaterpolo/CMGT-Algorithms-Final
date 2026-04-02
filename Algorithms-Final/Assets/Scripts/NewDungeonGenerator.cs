@@ -3,6 +3,7 @@ using NUnit.Framework.Internal.Commands;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -178,6 +179,9 @@ public class NewDungeonGenerator : Generator
         AmountOfRoomsToDelete = (int) (DoneRooms.Count * DeletePercent / 100);
         Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
 
+        ///testing purposes
+        MakeRandomizedDoorList();
+
         DispatchOnEndGenerationEvent();
     }
     public void GetOverlaps(int i, int j)
@@ -212,12 +216,31 @@ public class NewDungeonGenerator : Generator
         Doors.Add(overlap);
     }
 
+    List<RectInt> RandomDoors;
+    int currentDeleteIndex = 0;
+    void MakeRandomizedDoorList()
+    {
+        RandomDoors = new(Doors);
+
+        for (int i = 0; i < RandomDoors.Count; i++)
+        {
+            RectInt temp = RandomDoors[i];
+            int RI = Random.Range(i, RandomDoors.Count);
+            RandomDoors[i] = RandomDoors[RI];
+            RandomDoors[RI] = temp;
+        }
+
+        currentDeleteIndex = 0;
+    }
     void DeleteDoor()
     {
-        int randomIndex = Random.Range(0, Doors.Count);
+        //int randomIndex = Random.Range(0, Doors.Count);
+        //SavedDoor = Doors[randomIndex];
 
-        SavedDoor = Doors[randomIndex];
+        SavedDoor = RandomDoors[currentDeleteIndex];
         Doors.Remove(SavedDoor);
+
+        currentDeleteIndex++;
 
         DispatchOnEndGenerationEvent();
     }
@@ -225,7 +248,6 @@ public class NewDungeonGenerator : Generator
     public void AddDoor()
     {
         Doors.Add(SavedDoor);
-
         DispatchOnEndGenerationEvent();
     }
 
