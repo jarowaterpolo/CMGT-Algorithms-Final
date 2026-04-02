@@ -20,7 +20,6 @@ public class SearchDungeon : Generator
     public AudioSource CompleteSound;
     private bool Complete;
 
-    private int i;
     private int j;
 
 
@@ -48,13 +47,15 @@ public class SearchDungeon : Generator
     private void DungeonGen_OnStartGeneration()
     {
         Complete = false;
-        i = 0;
         j = 0;
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator SearchDungeonGraph()
     {
+        UnityEngine.Random.InitState(DungeonGen.seed);
+        //Debug.Log("Current Seed in use = " + DungeonGen.seed);
+
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
         j++;
@@ -66,24 +67,44 @@ public class SearchDungeon : Generator
 
         Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
 
-        var allRoomsReachable = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
+        var (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
 
-        if (allRoomsReachable)
+        if (DungeonGen.AmountOfRoomsToDelete > 0)
         {
-            DispatchOnEndGenerationEvent();
+            if (allRoomsReachable)
+            {
+                DispatchOnEndGenerationEvent();
+            }
+            else
+            {
+                DungeonGen.AddRoom();
+            }
         }
         else
         {
-            i++;
-            DungeonGen.AddDoor();
-            //DungeonGen.AddRoom();
-        }
+            Debug.Log("all rooms that needed to be deleted are gone");
 
-        if (i >= RemoveDoorRepeatCount)
-        {
-            Complete = true;
-            CompleteSound.Play();
-            Debug.Log("BFS Finished");
+            if (hasLoop == true && allRoomsReachable)
+            {
+                Debug.Log("dungeon still has a loop");
+                DispatchOnEndGenerationEvent();
+            }
+            else if (hasLoop != true && allRoomsReachable != true)
+            {
+                Debug.Log("dungeon door added");
+                DungeonGen.AddDoor();
+            }
+            else if (allRoomsReachable == true && hasLoop != true)
+            {
+                Debug.Log("dungeon gen done");
+            }
+            else
+            {
+                Debug.Log("dungeon door added");
+                DungeonGen.AddDoor();
+            }
+
+            Debug.Log(allRoomsReachable + "= room reachable & " + hasLoop + " = has loop ");
         }
     }
 }

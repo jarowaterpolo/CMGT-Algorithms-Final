@@ -3,6 +3,7 @@ using NUnit.Framework.Internal.Commands;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,8 +25,6 @@ public class NewDungeonGenerator : Generator
     public bool splitHorizontally;
     public int roomIndex;
 
-    public int N;
-
     public bool ShowDoneRooms = true;
 
     public Vector2 DoorRandomRange = new Vector2(1,7);
@@ -33,20 +32,42 @@ public class NewDungeonGenerator : Generator
 
     public float DungeonDrawHeight;
 
+    public float DeletePercent;
+    public bool DeleteSmallestRoom;
+
+    public int seed;
+    public bool useRandomSeed;
+
+    List<RectInt> SavedDoors = new();
+
     private SearchDungeon searchDungeon;
     private RectInt SavedDoor;
     private RectInt SavedRoom;
+    
+    [HideInInspector] public int AmountOfRoomsToDelete;
+
+    private Cam cameraScript;
 
     public void Start()
     {
+        cameraScript = GetComponent<Cam>();
+
         searchDungeon = GetComponent<SearchDungeon>();
         searchDungeon.OnEndGeneration += searchDungeon_OnEndSearch;
     }
 
     private void searchDungeon_OnEndSearch()
     {
-        DeleteDoor();
-        //DeleteRoom();
+        Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
+
+        if (AmountOfRoomsToDelete > 0)
+        { 
+            DeleteRoom();
+        }
+        else
+        {
+            DeleteDoor();
+        }
     }
 
     void Update()
@@ -103,6 +124,21 @@ public class NewDungeonGenerator : Generator
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator GenerateDungeon()
     {
+        cameraScript.UpdateCam();
+
+        if (useRandomSeed)
+        {
+            seed = System.DateTime.Now.GetHashCode();
+            Debug.Log("Random seed used = " + seed);
+        }
+        else
+        {
+            Debug.Log("Seed from inspector used = " + seed);
+        }
+
+        Random.InitState(seed);
+        //Debug.Log("Current Seed in use = " + seed);
+
         ToDoRooms.Clear();
         DoneRooms.Clear();
         Overlaps.Clear();
@@ -138,6 +174,9 @@ public class NewDungeonGenerator : Generator
         }
 
         CurrentRoom = new();
+
+        AmountOfRoomsToDelete = (int) (DoneRooms.Count * DeletePercent / 100);
+        Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
 
         DispatchOnEndGenerationEvent();
     }
@@ -175,7 +214,9 @@ public class NewDungeonGenerator : Generator
 
     void DeleteDoor()
     {
-        SavedDoor = Doors[Random.Range(0, Doors.Count)];
+        int randomIndex = Random.Range(0, Doors.Count);
+
+        SavedDoor = Doors[randomIndex];
         Doors.Remove(SavedDoor);
 
         DispatchOnEndGenerationEvent();
@@ -190,8 +231,50 @@ public class NewDungeonGenerator : Generator
 
     void DeleteRoom()
     {
-        SavedRoom = DoneRooms[Random.Range(0, DoneRooms.Count)];
+        if (!DeleteSmallestRoom)
+        {
+            SavedRoom = DoneRooms[Random.Range(0, DoneRooms.Count)];
+        }
+        else
+        {
+            SavedDoors.Clear();
+            RectInt smallestRoom = DoneRooms[0];
+
+            foreach (var room in DoneRooms)
+            {
+                int smallestRoomSize = smallestRoom.width * smallestRoom.height;
+                int currentRoomSize = room.width * room.height;
+
+                //Debug.Log($"CurrentRoom: {room} Size: {currentRoomSize}");
+                //Debug.Log($"SmallestRoom: {smallestRoom} Size: {smallestRoomSize}");
+
+                if (currentRoomSize < smallestRoomSize)
+                {
+                    smallestRoom = room;
+                    //Debug.Log($"Room: {room} Size: {currentRoomSize}");
+                }
+            }
+
+            SavedRoom = smallestRoom;
+        }
+
+        for (int i = 0; i < Doors.Count; i++)
+        {
+            if (SavedRoom.Overlaps(Doors[i]))
+            {
+                Debug.Log("door " + i + " was added " + Doors[i].ToString());
+                SavedDoors.Add(Doors[i]);
+            }
+        }
+
         DoneRooms.Remove(SavedRoom);
+
+        foreach (var door in SavedDoors)
+        {
+            Doors.Remove(door);
+        }
+
+        AmountOfRoomsToDelete--;
 
         DispatchOnEndGenerationEvent();
     }
@@ -199,6 +282,13 @@ public class NewDungeonGenerator : Generator
     public void AddRoom()
     {
         DoneRooms.Add(SavedRoom);
+        
+        foreach(var door in SavedDoors)
+        {
+            Doors.Add(door);
+        }
+
+        SavedDoors.Clear();
 
         DispatchOnEndGenerationEvent();
     }

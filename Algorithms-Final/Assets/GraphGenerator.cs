@@ -80,6 +80,9 @@ public class GraphGenerator : Generator
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator GenerateGraph()
     {
+        Random.InitState(DungeonGen.seed);
+        //Debug.Log("Current Seed in use = " + DungeonGen.seed);
+
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
 

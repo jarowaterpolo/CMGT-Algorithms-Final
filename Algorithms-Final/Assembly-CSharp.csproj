@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DebugDrawingBatcher.cs" />
+    <Compile Include="Assets\Cam.cs" />
     <Compile Include="Assets\SearchAlgorithms.cs" />
     <Compile Include="Assets\DebugDrawingExtension\Example\Example.cs" />
     <Compile Include="Assets\Scripts\DungeonGenerator.cs" />
