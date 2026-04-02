@@ -82,29 +82,29 @@ public class SearchDungeon : Generator
         }
         else
         {
-            Debug.Log("all rooms that needed to be deleted are gone");
+            //Debug.Log("all rooms that needed to be deleted are gone");
 
             if (hasLoop == true && allRoomsReachable)
             {
-                Debug.Log("dungeon still has a loop");
+                //Debug.Log("dungeon still has a loop");
                 DispatchOnEndGenerationEvent();
             }
             else if (hasLoop != true && allRoomsReachable != true)
             {
-                Debug.Log("dungeon door added");
+                //Debug.Log("dungeon door added");
                 DungeonGen.AddDoor();
             }
             else if (allRoomsReachable == true && hasLoop != true)
             {
-                Debug.Log("dungeon gen done");
+                //Debug.Log("dungeon gen done");
             }
             else
             {
-                Debug.Log("dungeon door added");
+                //Debug.Log("dungeon door added");
                 DungeonGen.AddDoor();
             }
 
-            Debug.Log(allRoomsReachable + "= room reachable & " + hasLoop + " = has loop ");
+            //Debug.Log(allRoomsReachable + "= room reachable & " + hasLoop + " = has loop ");
         }
     }
 }

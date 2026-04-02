@@ -27,6 +27,7 @@ public class NewDungeonGenerator : Generator
     public int roomIndex;
 
     public bool ShowDoneRooms = true;
+    public bool ShowOverlaps = true;
 
     public Vector2 DoorRandomRange = new Vector2(1,7);
     public int DoorSize = 2;
@@ -284,7 +285,7 @@ public class NewDungeonGenerator : Generator
         {
             if (SavedRoom.Overlaps(Doors[i]))
             {
-                Debug.Log("door " + i + " was added " + Doors[i].ToString());
+                //Debug.Log("door " + i + " was added " + Doors[i].ToString());
                 SavedDoors.Add(Doors[i]);
             }
         }
@@ -332,12 +333,15 @@ public class NewDungeonGenerator : Generator
             AlgorithmsUtils.DebugRectInt(ToDoRooms[i], colors[1]);
         }
 
-        if (Overlaps.Count > 0)
+        if (ShowOverlaps)
         {
-            //Drawing Overlaps
-            for (int i = 0; i < Overlaps.Count; i++)
+            if (Overlaps.Count > 0)
             {
-                AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, DungeonDrawHeight);
+                //Drawing Overlaps
+                for (int i = 0; i < Overlaps.Count; i++)
+                {
+                    AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, DungeonDrawHeight);
+                }
             }
         }
 
