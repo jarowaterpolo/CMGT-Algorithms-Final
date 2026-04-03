@@ -742,8 +742,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536f0ec165bc1544b9ff06289261a878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
-  splitDelay: 0.05
+  splitType: 1
+  splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
@@ -766,6 +766,7 @@ MonoBehaviour:
   splitHorizontally: 0
   roomIndex: 0
   ShowDoneRooms: 1
+  ShowOverlaps: 1
   DoorRandomRange: {x: 2, y: 7}
   DoorSize: 2
   DungeonDrawHeight: 5
@@ -786,8 +787,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53f0d6bc6c5fb94cb24c756697e30c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
-  splitDelay: 0.05
+  splitType: 1
+  splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
@@ -808,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitType: 1
-  splitDelay: 0.05
+  splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
@@ -817,7 +818,6 @@ MonoBehaviour:
   - {r: 255, g: 175, b: 0, a: 1}
   - {r: 0, g: 0.100931406, b: 1, a: 1}
   audioSource: {fileID: 249377955}
-  RemoveDoorRepeatCount: 100
   CompleteSound: {fileID: 1942093069}
 --- !u!114 &1082379054
 MonoBehaviour:

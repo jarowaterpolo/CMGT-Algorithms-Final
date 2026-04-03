@@ -15,8 +15,6 @@ public class SearchDungeon : Generator
 
     public SearchAlgorithms<Vector3> searchAlgorithm;
 
-    public int RemoveDoorRepeatCount = 10;
-
     public AudioSource CompleteSound;
     private bool Complete;
 
