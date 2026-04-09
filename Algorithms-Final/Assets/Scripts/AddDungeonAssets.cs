@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Unity.AI.Navigation;
@@ -22,15 +23,15 @@ public class AddDungeonAssets : Generator
     [SerializeField]
     private Transform parent;
 
-    [SerializeField]
-    NavMeshSurface navMesh;
-
     private RectInt SavedRoom;
 
     private Vector3 Offset = new(.5f, 0, .5f);
+    private Vector3 DoorOffset = new();
 
     HashSet<Vector3> Wall_Positions = new();
     HashSet<Vector3> Floor_Positions = new();
+
+    private bool DoneGenerating;
 
     private void Start()
     {
@@ -44,7 +45,10 @@ public class AddDungeonAssets : Generator
 
     private void DungeonGen_OnStartGeneration()
     {
-        
+        StopAllCoroutines();
+        SavedRoom = RectInt.zero;
+        Wall_Positions.Clear();
+        Floor_Positions.Clear();
     }
 
     private void searchDungeon_OnEndSearch()
@@ -55,13 +59,16 @@ public class AddDungeonAssets : Generator
     //[Button]
     public void SpawnDungeonAssets()
     {
+        DispatchOnStartGenerationEvent();
+
         foreach (Transform child in parent.transform)
         {
             Destroy(child.gameObject);
         }
 
         SpawnWallsForRooms();
-        SpawnFloorsForRooms();
+        //SpawnFloorsForRooms();
+        StartCoroutine(SpawnFloorsForRooms());
     }
 
     private void SpawnWallsForRooms()
@@ -76,17 +83,16 @@ public class AddDungeonAssets : Generator
 
                 for (int i = 0; i < doorSize; i++)
                 {
-                    Vector3 DoorOfsset = new();
                     Debug.Log("doorsize = " + i);
                     if (door.width > door.height)
                     {
-                        DoorOfsset = new(i, 0, 0);
+                        DoorOffset = new(i, 0, 0);
                     }
                     else
                     {
-                        DoorOfsset = new(0, 0, i);
+                        DoorOffset = new(0, 0, i);
                     }
-                    Wall_Positions.Add(new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOfsset);
+                    Wall_Positions.Add(new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOffset);
                 }
             }
             else
@@ -97,11 +103,12 @@ public class AddDungeonAssets : Generator
 
         foreach (var room in DungeonGen.DoneRooms)
         {
-            SpawnWallsForRoom(room);
+            //SpawnWallsForRoom(room);
+            StartCoroutine(SpawnWallsForRoom(room));
         }
     }
 
-    private void SpawnWallsForRoom(RectInt room)
+    private IEnumerator SpawnWallsForRoom(RectInt room)
     {
         for (int i = room.xMin; i < room.xMax; i++)
         {
@@ -112,6 +119,7 @@ public class AddDungeonAssets : Generator
             {
                 H_Wall_Front.name = "H_Wall_Front_" + i;
             }
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
             SpawnPos.z = room.yMax - .5f;
 
@@ -120,6 +128,7 @@ public class AddDungeonAssets : Generator
             {
                 H_Wall_Back.name = "H_Wall_Back_" + i;
             }
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
 
         for (int i = room.yMin; i < room.yMax; i++)
@@ -131,6 +140,7 @@ public class AddDungeonAssets : Generator
             {
                 V_Wall_Left.name = "V_Wall_Left_" + i;
             }
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
             SpawnPos.x = room.xMax - .5f;
 
@@ -139,6 +149,7 @@ public class AddDungeonAssets : Generator
             {
                 V_Wall_Right.name = "V_Wall_Right_" + i;
             }
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
     }
 
@@ -151,13 +162,17 @@ public class AddDungeonAssets : Generator
 
         return Wall;
     }
-    private void SpawnFloorsForRooms()
+    private IEnumerator SpawnFloorsForRooms()
     {
         SavedRoom = RectInt.zero;
 
-        foreach (var room in DungeonGen.DoneRooms)
+        for (int i = 0; i <  DungeonGen.DoneRooms.Count; i++)
         {
-            SpawnFloorForRooms(room);
+            var room = DungeonGen.DoneRooms[i];
+            //SpawnFloorForRooms(room);
+            yield return StartCoroutine(SpawnFloorForRooms(room));
+            DoneGenerating = true;
+            DispatchOnEndGenerationEvent();
         }
 
         foreach (var door in DungeonGen.Doors)
@@ -169,35 +184,38 @@ public class AddDungeonAssets : Generator
 
                 for (int i = 0; i < doorSize; i++)
                 {
-                    Vector3 DoorOfsset = new();
                     Debug.Log("doorsize = " + i);
                     if (door.width > door.height)
                     {
-                        DoorOfsset = new(i, 0, 0);
+                        DoorOffset = new(i, 0, 0);
                     }
                     else
                     {
-                        DoorOfsset = new(0, 0, i);
+                        DoorOffset = new(0, 0, i);
                     }
-                    SpawnPos = new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOfsset;
+                    SpawnPos = new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOffset;
+                    GameObject FloorPiece = AddFloor(SpawnPos);
+                    if (FloorPiece != null)
+                    {
+                        FloorPiece.name = "Floor_Piece_Door";
+                    }
+                    if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
                 }
             }
             else
             {
                 SpawnPos = new(door.x + .5f, 0, door.y + .5f);
-            }
-
-
-
-            GameObject FloorPiece = AddFloor(SpawnPos);
-            if (FloorPiece != null)
-            {
-                FloorPiece.name = "Floor_Piece_Door";
+                GameObject FloorPiece = AddFloor(SpawnPos);
+                if (FloorPiece != null)
+                {
+                    FloorPiece.name = "Floor_Piece_Door";
+                }
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             }
         }
     }
 
-    private void SpawnFloorForRooms(RectInt room)
+    private IEnumerator SpawnFloorForRooms(RectInt room)
     {
         for (int i = room.xMin + 1; i < room.xMax - 1; i++)
         {
@@ -210,6 +228,7 @@ public class AddDungeonAssets : Generator
                 {
                     FloorPiece.name = "Floor_Piece_" + i;
                 }
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             }
         }
     }
@@ -223,4 +242,5 @@ public class AddDungeonAssets : Generator
 
         return FloorPiece;
     }
+
 }
