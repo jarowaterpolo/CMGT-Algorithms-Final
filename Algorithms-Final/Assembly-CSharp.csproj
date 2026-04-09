@@ -68,6 +68,7 @@
     <Compile Include="Assets\DebugDrawingExtension\DebugExtension.cs" />
     <Compile Include="Assets\Scripts\AlgorithmsUtils.cs" />
     <Compile Include="Assets\Scripts\BakeNavMesh.cs" />
+    <Compile Include="Assets\Scripts\MouseClickController.cs" />
     <Compile Include="Assets\Scripts\SearchDungeon.cs" />
     <Compile Include="Assets\Scripts\Cam.cs" />
     <Compile Include="Assets\Scripts\Generator.cs" />

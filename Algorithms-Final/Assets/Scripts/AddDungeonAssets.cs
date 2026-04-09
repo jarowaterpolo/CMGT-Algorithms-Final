@@ -53,11 +53,11 @@ public class AddDungeonAssets : Generator
 
     private void searchDungeon_OnEndSearch()
     {
-        SpawnDungeonAssets();
+        StartCoroutine(SpawnDungeonAssets());
     }
 
     //[Button]
-    public void SpawnDungeonAssets()
+    public IEnumerator SpawnDungeonAssets()
     {
         DispatchOnStartGenerationEvent();
 
@@ -66,12 +66,19 @@ public class AddDungeonAssets : Generator
             Destroy(child.gameObject);
         }
 
-        SpawnWallsForRooms();
+        yield return SpawnWallsForRooms();
+        Debug.Log("Generating Rooms is done");
         //SpawnFloorsForRooms();
-        StartCoroutine(SpawnFloorsForRooms());
+        yield return StartCoroutine(SpawnFloorsForRooms());
+        Debug.Log("Generating Floors is done");
+
+        yield return null;
+
+        DoneGenerating = true;
+        DispatchOnEndGenerationEvent();
     }
 
-    private void SpawnWallsForRooms()
+    private IEnumerator SpawnWallsForRooms()
     {
         SavedRoom = RectInt.zero;
 
@@ -104,7 +111,7 @@ public class AddDungeonAssets : Generator
         foreach (var room in DungeonGen.DoneRooms)
         {
             //SpawnWallsForRoom(room);
-            StartCoroutine(SpawnWallsForRoom(room));
+            yield return StartCoroutine(SpawnWallsForRoom(room));
         }
     }
 
@@ -171,8 +178,6 @@ public class AddDungeonAssets : Generator
             var room = DungeonGen.DoneRooms[i];
             //SpawnFloorForRooms(room);
             yield return StartCoroutine(SpawnFloorForRooms(room));
-            DoneGenerating = true;
-            DispatchOnEndGenerationEvent();
         }
 
         foreach (var door in DungeonGen.Doors)
