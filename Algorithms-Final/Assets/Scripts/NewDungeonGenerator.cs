@@ -55,10 +55,10 @@ public class NewDungeonGenerator : Generator
         cameraScript = GetComponent<Cam>();
 
         searchDungeon = GetComponent<SearchDungeon>();
-        searchDungeon.OnEndGeneration += searchDungeon_OnEndSearch;
+        searchDungeon.OnNeededRepeat += searchDungeon_OnRepeatSearch;
     }
 
-    private void searchDungeon_OnEndSearch()
+    private void searchDungeon_OnRepeatSearch()
     {
         Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
 

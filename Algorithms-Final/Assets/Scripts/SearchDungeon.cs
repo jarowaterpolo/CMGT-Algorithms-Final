@@ -71,7 +71,7 @@ public class SearchDungeon : Generator
         {
             if (allRoomsReachable)
             {
-                DispatchOnEndGenerationEvent();
+                DispatchOnNeededRepeatEvent();
             }
             else
             {
@@ -85,7 +85,7 @@ public class SearchDungeon : Generator
             if (hasLoop == true && allRoomsReachable)
             {
                 //Debug.Log("dungeon still has a loop");
-                DispatchOnEndGenerationEvent();
+                DispatchOnNeededRepeatEvent();
             }
             else if (hasLoop != true && allRoomsReachable != true)
             {
@@ -95,6 +95,7 @@ public class SearchDungeon : Generator
             else if (allRoomsReachable == true && hasLoop != true)
             {
                 //Debug.Log("dungeon gen done");
+                DispatchOnEndGenerationEvent();
             }
             else
             {

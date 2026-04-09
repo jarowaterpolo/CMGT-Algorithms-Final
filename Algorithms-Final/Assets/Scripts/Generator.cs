@@ -7,6 +7,8 @@ public abstract class Generator : MonoBehaviour
 {
     public event Action OnStartGeneration;
     public event Action OnEndGeneration;
+
+    public event Action OnNeededRepeat;
     public enum SplitType
     {
         Instant, Overtime, Space
@@ -28,6 +30,11 @@ public abstract class Generator : MonoBehaviour
     protected void DispatchOnEndGenerationEvent()
     {
         OnEndGeneration?.Invoke();
+    }
+
+    protected void DispatchOnNeededRepeatEvent()
+    {
+        OnNeededRepeat?.Invoke();
     }
 
     public IEnumerator CustomWait(SplitType splitType, float splitDelay)

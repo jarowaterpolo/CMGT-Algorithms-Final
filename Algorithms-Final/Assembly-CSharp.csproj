@@ -62,17 +62,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DebugDrawingBatcher.cs" />
-    <Compile Include="Assets\Cam.cs" />
-    <Compile Include="Assets\SearchAlgorithms.cs" />
     <Compile Include="Assets\DebugDrawingExtension\Example\Example.cs" />
     <Compile Include="Assets\Scripts\DungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\SearchAlgorithms.cs" />
     <Compile Include="Assets\DebugDrawingExtension\DebugExtension.cs" />
     <Compile Include="Assets\Scripts\AlgorithmsUtils.cs" />
-    <Compile Include="Assets\GraphGenerator.cs" />
-    <Compile Include="Assets\SearchDungeon.cs" />
+    <Compile Include="Assets\Scripts\SearchDungeon.cs" />
+    <Compile Include="Assets\Scripts\Cam.cs" />
     <Compile Include="Assets\Scripts\Generator.cs" />
     <Compile Include="Assets\Scripts\NewDungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\Graph.cs" />
+    <Compile Include="Assets\Scripts\AddDungeonAssets.cs" />
     <Compile Include="Assets\Scripts\HelloDebugDrawing.cs" />
   </ItemGroup>
   <ItemGroup>
