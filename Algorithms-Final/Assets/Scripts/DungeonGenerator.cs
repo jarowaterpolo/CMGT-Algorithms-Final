@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class DungeonGenerator : MonoBehaviour
 {
-    //public RectInt StartRoom;
+    //public RectInt startRoom;
     public List<RectInt> rooms;
 
     [SerializeField] 
@@ -45,7 +45,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         for (int i = 0; i < rooms.Count; i++)
         {
-            //AlgorithmsUtils.DebugRectInt(StartRoom[i], colors[i % 2]);
+            //AlgorithmsUtils.DebugRectInt(startRoom[i], colors[i % 2]);
         }
 
         for (int i = 0; i < DoneRooms.Count; i++)
@@ -58,7 +58,7 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2]);
-        //foreach (var room in StartRoom)
+        //foreach (var room in startRoom)
         //{
         //    AlgorithmsUtils.DebugRectInt(room, colors[N % 2]);
         //}
@@ -260,7 +260,7 @@ public class DungeonGenerator : MonoBehaviour
 
             CurrentRoom = newRoom;
 
-            //Debug.Log("INPUT Room = " + CurrentRoom);
+            //Debug.Log("INPUT Room = " + currentRoom);
 
             if (newRoom.width <= minRoomSize.width * 2 && newRoom.height <= minRoomSize.height * 2)
             {
@@ -327,7 +327,7 @@ public class DungeonGenerator : MonoBehaviour
 
             CurrentRoom = newRoom;
 
-            //Debug.Log("INPUT Room = " + CurrentRoom);
+            //Debug.Log("INPUT Room = " + currentRoom);
 
             if (newRoom.width <= minRoomSize.width * 2 && newRoom.height <= minRoomSize.height * 2)
             {

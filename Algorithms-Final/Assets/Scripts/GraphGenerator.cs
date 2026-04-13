@@ -21,8 +21,8 @@ public class GraphGenerator : Generator
     void Start()
     {
         DungeonGen = GetComponent<NewDungeonGenerator>();
-        DoneRooms = DungeonGen.DoneRooms;
-        Doors = DungeonGen.Doors;
+        DoneRooms = DungeonGen.doneRooms;
+        Doors = DungeonGen.doors;
 
         RoomGraph = new Graph<Vector3>();
         DoorGraph = new Graph<Vector3>();

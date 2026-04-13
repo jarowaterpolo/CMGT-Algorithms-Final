@@ -19,7 +19,7 @@ public class Cam : MonoBehaviour
     }
     public void UpdateCam()
     {
-        Vector3 CamPos = new(DungeonGen.StartRoom[0].width / 128 * 60, 100 * (DungeonGen.StartRoom[0].width / 256f + DungeonGen.StartRoom[0].height / 128f), DungeonGen.StartRoom[0].height / 64 * 35);
+        Vector3 CamPos = new(DungeonGen.startRoom[0].width / 128 * 60, 100 * (DungeonGen.startRoom[0].width / 256f + DungeonGen.startRoom[0].height / 128f), DungeonGen.startRoom[0].height / 64 * 35);
         cam.transform.position = CamPos;
     }
 }

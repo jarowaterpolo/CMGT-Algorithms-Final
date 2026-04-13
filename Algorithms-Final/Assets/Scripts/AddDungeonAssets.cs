@@ -82,11 +82,11 @@ public class AddDungeonAssets : Generator
     {
         SavedRoom = RectInt.zero;
 
-        foreach (var door in DungeonGen.Doors)
+        foreach (var door in DungeonGen.doors)
         {
-            if (DungeonGen.DoorSize > 1)
+            if (DungeonGen.doorSize > 1)
             {
-                var doorSize = DungeonGen.DoorSize;
+                var doorSize = DungeonGen.doorSize;
 
                 for (int i = 0; i < doorSize; i++)
                 {
@@ -108,7 +108,7 @@ public class AddDungeonAssets : Generator
             }
         }
 
-        foreach (var room in DungeonGen.DoneRooms)
+        foreach (var room in DungeonGen.doneRooms)
         {
             //SpawnWallsForRoom(room);
             yield return SpawnWallsForRoom(room);
@@ -173,19 +173,19 @@ public class AddDungeonAssets : Generator
     {
         SavedRoom = RectInt.zero;
 
-        for (int i = 0; i <  DungeonGen.DoneRooms.Count; i++)
+        for (int i = 0; i <  DungeonGen.doneRooms.Count; i++)
         {
-            var room = DungeonGen.DoneRooms[i];
+            var room = DungeonGen.doneRooms[i];
             //SpawnFloorForRooms(room);
             yield return SpawnFloorForRooms(room);
         }
 
-        foreach (var door in DungeonGen.Doors)
+        foreach (var door in DungeonGen.doors)
         {
             Vector3 SpawnPos = new();
-            if (DungeonGen.DoorSize > 1)
+            if (DungeonGen.doorSize > 1)
             {
-                var doorSize = DungeonGen.DoorSize;
+                var doorSize = DungeonGen.doorSize;
 
                 for (int i = 0; i < doorSize; i++)
                 {

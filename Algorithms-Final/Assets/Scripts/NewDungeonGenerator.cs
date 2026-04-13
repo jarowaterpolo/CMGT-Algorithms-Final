@@ -10,43 +10,35 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class NewDungeonGenerator : Generator
 {
-    public List<RectInt> StartRoom;
+    public List<RectInt> startRoom;
 
-    private List<RectInt> ToDoRooms = new();
+    private List<RectInt> toDoRooms = new();
     [HideInInspector]
-    public List<RectInt> DoneRooms = new();
+    public List<RectInt> doneRooms = new();
     private List<RectInt> Overlaps = new();
     //[HideInInspector]
-    public List<RectInt> Doors = new();
+    public List<RectInt> doors = new();
 
-    private RectInt CurrentRoom;
+    private RectInt currentRoom;
 
     public RectInt minRoomSize = new RectInt(0, 0, 8, 8);
 
     public bool splitHorizontally;
     public int roomIndex;
 
-    public bool ShowDoneRooms = true;
-    public bool ShowOverlaps = true;
+    public bool showDoneRooms = true;
+    public bool showOverlaps = true;
 
-    public Vector2 DoorRandomRange = new Vector2(1,7);
-    public int DoorSize = 2;
+    public Vector2 doorRandomRange = new Vector2(1,7);
+    public int doorSize = 2;
 
-    public float DungeonDrawHeight;
-
-    public float DeletePercent;
-    public bool DeleteSmallestRoom;
+    public float dungeonDrawHeight;
 
     public int seed;
     public bool useRandomSeed;
 
-    List<RectInt> SavedDoors = new();
-
     private SearchDungeon searchDungeon;
-    private RectInt SavedDoor;
-    private RectInt SavedRoom;
-    
-    [HideInInspector] public int AmountOfRoomsToDelete;
+
 
     private Cam cameraScript;
 
@@ -60,9 +52,9 @@ public class NewDungeonGenerator : Generator
 
     private void searchDungeon_OnRepeatSearch()
     {
-        Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
+        Debug.Log("need to delete " + amountOfRoomsToDelete + " Rooms");
 
-        if (AmountOfRoomsToDelete > 0)
+        if (amountOfRoomsToDelete > 0)
         { 
             DeleteRoom();
         }
@@ -79,13 +71,13 @@ public class NewDungeonGenerator : Generator
     public void SplitRandom()
     {
         int random;
-        RectInt newRoom = ToDoRooms[roomIndex];
-        ToDoRooms.Remove(ToDoRooms[roomIndex]);
-        CurrentRoom = newRoom;
+        RectInt newRoom = toDoRooms[roomIndex];
+        toDoRooms.Remove(toDoRooms[roomIndex]);
+        currentRoom = newRoom;
 
         if (newRoom.width <= minRoomSize.width * 2 && newRoom.height <= minRoomSize.height * 2)
         {
-            DoneRooms.Add(newRoom);
+            doneRooms.Add(newRoom);
         }
         else
         {
@@ -99,28 +91,28 @@ public class NewDungeonGenerator : Generator
                 random = Random.Range(minRoomSize.height, newRoom.height - minRoomSize.height);
                 newRoom.height = random;
 
-                ToDoRooms.Add(newRoom);
+                toDoRooms.Add(newRoom);
 
-                newRoom.height = CurrentRoom.height - random + 1;
+                newRoom.height = currentRoom.height - random + 1;
                 newRoom.y = newRoom.y + random - 1;
 
-                ToDoRooms.Add(newRoom);
+                toDoRooms.Add(newRoom);
             }
             else
             {
                 random = Random.Range(minRoomSize.width, newRoom.width - minRoomSize.width);
                 newRoom.width = random;
 
-                ToDoRooms.Add(newRoom);
+                toDoRooms.Add(newRoom);
 
-                newRoom.width = CurrentRoom.width - random + 1;
+                newRoom.width = currentRoom.width - random + 1;
                 newRoom.x = newRoom.x + random - 1;
 
-                ToDoRooms.Add(newRoom);
+                toDoRooms.Add(newRoom);
                 splitHorizontally = false;
             }
         }
-        //CurrentRoom = new RectInt();
+        //currentRoom = new RectInt();
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
@@ -141,28 +133,28 @@ public class NewDungeonGenerator : Generator
         Random.InitState(seed);
         //Debug.Log("Current Seed in use = " + seed);
 
-        ToDoRooms.Clear();
-        DoneRooms.Clear();
+        toDoRooms.Clear();
+        doneRooms.Clear();
         Overlaps.Clear();
-        Doors.Clear();
+        doors.Clear();
 
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
         audioSource.Play();
 
-        ToDoRooms.Add(StartRoom[0]);
+        toDoRooms.Add(startRoom[0]);
 
-        while (ToDoRooms.Count > 0)
+        while (toDoRooms.Count > 0)
         {
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             SplitRandom();
         }
 
-        for (int i = 0; i < DoneRooms.Count; i++)
+        for (int i = 0; i < doneRooms.Count; i++)
         {
-            for (int j = i + 1; j < DoneRooms.Count; j++)
+            for (int j = i + 1; j < doneRooms.Count; j++)
             {
-                if (AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).width < 1 && AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]).height < 1) continue;
+                if (AlgorithmsUtils.Intersect(doneRooms[i], doneRooms[j]).width < 1 && AlgorithmsUtils.Intersect(doneRooms[i], doneRooms[j]).height < 1) continue;
 
                 if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
                 GetOverlaps(i, j);
@@ -175,10 +167,7 @@ public class NewDungeonGenerator : Generator
             PlaceDoors(i);
         }
 
-        CurrentRoom = new();
-
-        AmountOfRoomsToDelete = (int) (DoneRooms.Count * DeletePercent / 100);
-        Debug.Log("need to delete " + AmountOfRoomsToDelete + " Rooms");
+        currentRoom = new();
 
         ///testing purposes
         MakeRandomizedDoorList();
@@ -187,10 +176,10 @@ public class NewDungeonGenerator : Generator
     }
     public void GetOverlaps(int i, int j)
     {
-        var OverlapedSpace = AlgorithmsUtils.Intersect(DoneRooms[i], DoneRooms[j]);
-        CurrentRoom = OverlapedSpace;
+        var OverlapedSpace = AlgorithmsUtils.Intersect(doneRooms[i], doneRooms[j]);
+        currentRoom = OverlapedSpace;
 
-        if (OverlapedSpace.width >= 5 * DoorSize || OverlapedSpace.height >= 5 * DoorSize)
+        if (OverlapedSpace.width >= 5 * doorSize || OverlapedSpace.height >= 5 * doorSize)
         {
             Overlaps.Add(OverlapedSpace);
         }
@@ -199,158 +188,59 @@ public class NewDungeonGenerator : Generator
     public void PlaceDoors(int i)
     {
         var overlap = Overlaps[i];
-        float Rx = Random.Range(overlap.x + 2 * DoorSize, overlap.x + overlap.width - 2 * DoorSize);
-        float Ry = Random.Range(overlap.y + 2 * DoorSize, overlap.y + overlap.height - 2 * DoorSize);
+        float Rx = Random.Range(overlap.x + 2 * doorSize, overlap.x + overlap.width - 2 * doorSize);
+        float Ry = Random.Range(overlap.y + 2 * doorSize, overlap.y + overlap.height - 2 * doorSize);
 
         if (overlap.height == 1)
         {
             overlap.x = (int)Rx;
-            overlap.width = 1 * DoorSize;
+            overlap.width = 1 * doorSize;
         }
         else if (overlap.width == 1)
         {
             overlap.y = (int)Ry;
-            overlap.height = 1 * DoorSize;
+            overlap.height = 1 * doorSize;
         }
 
-        CurrentRoom = overlap;
-        Doors.Add(overlap);
-    }
-
-    List<RectInt> RandomDoors;
-    int currentDeleteIndex = 0;
-    void MakeRandomizedDoorList()
-    {
-        RandomDoors = new(Doors);
-
-        for (int i = 0; i < RandomDoors.Count; i++)
-        {
-            RectInt temp = RandomDoors[i];
-            int RI = Random.Range(i, RandomDoors.Count);
-            RandomDoors[i] = RandomDoors[RI];
-            RandomDoors[RI] = temp;
-        }
-
-        currentDeleteIndex = 0;
-    }
-    void DeleteDoor()
-    {
-        //int randomIndex = Random.Range(0, Doors.Count);
-        //SavedDoor = Doors[randomIndex];
-
-        SavedDoor = RandomDoors[currentDeleteIndex];
-        Doors.Remove(SavedDoor);
-
-        currentDeleteIndex++;
-
-        DispatchOnEndGenerationEvent();
-    }
-
-    public void AddDoor()
-    {
-        Doors.Add(SavedDoor);
-        DispatchOnEndGenerationEvent();
-    }
-
-    void DeleteRoom()
-    {
-        if (!DeleteSmallestRoom)
-        {
-            SavedRoom = DoneRooms[Random.Range(0, DoneRooms.Count)];
-        }
-        else
-        {
-            SavedDoors.Clear();
-            RectInt smallestRoom = DoneRooms[0];
-
-            foreach (var room in DoneRooms)
-            {
-                int smallestRoomSize = smallestRoom.width * smallestRoom.height;
-                int currentRoomSize = room.width * room.height;
-
-                //Debug.Log($"CurrentRoom: {room} Size: {currentRoomSize}");
-                //Debug.Log($"SmallestRoom: {smallestRoom} Size: {smallestRoomSize}");
-
-                if (currentRoomSize < smallestRoomSize)
-                {
-                    smallestRoom = room;
-                    //Debug.Log($"Room: {room} Size: {currentRoomSize}");
-                }
-            }
-
-            SavedRoom = smallestRoom;
-        }
-
-        for (int i = 0; i < Doors.Count; i++)
-        {
-            if (SavedRoom.Overlaps(Doors[i]))
-            {
-                //Debug.Log("door " + i + " was added " + Doors[i].ToString());
-                SavedDoors.Add(Doors[i]);
-            }
-        }
-
-        DoneRooms.Remove(SavedRoom);
-
-        foreach (var door in SavedDoors)
-        {
-            Doors.Remove(door);
-        }
-
-        AmountOfRoomsToDelete--;
-
-        DispatchOnEndGenerationEvent();
-    }
-
-    public void AddRoom()
-    {
-        DoneRooms.Add(SavedRoom);
-        
-        foreach(var door in SavedDoors)
-        {
-            Doors.Add(door);
-        }
-
-        SavedDoors.Clear();
-
-        DispatchOnEndGenerationEvent();
+        currentRoom = overlap;
+        doors.Add(overlap);
     }
 
     void DrawAll()
     {
-        if (ShowDoneRooms)
+        if (showDoneRooms)
         {
             //Drawing Done Rooms
-            for (int i = 0; i < DoneRooms.Count; i++)
+            for (int i = 0; i < doneRooms.Count; i++)
             {
-                AlgorithmsUtils.DebugRectInt(DoneRooms[i], colors[0], 0, false, DungeonDrawHeight);
+                AlgorithmsUtils.DebugRectInt(doneRooms[i], colors[0], 0, false, dungeonDrawHeight);
             }
         }
 
         //Drawing Not Done Rooms
-        for (int i = 0; i < ToDoRooms.Count; i++)
+        for (int i = 0; i < toDoRooms.Count; i++)
         {
-            AlgorithmsUtils.DebugRectInt(ToDoRooms[i], colors[1]);
+            AlgorithmsUtils.DebugRectInt(toDoRooms[i], colors[1]);
         }
 
-        if (ShowOverlaps)
+        if (showOverlaps)
         {
             if (Overlaps.Count > 0)
             {
                 //Drawing Overlaps
                 for (int i = 0; i < Overlaps.Count; i++)
                 {
-                    AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, DungeonDrawHeight);
+                    AlgorithmsUtils.DebugRectInt(Overlaps[i], colors[3], 0, false, dungeonDrawHeight);
                 }
             }
         }
 
-        for (int i = 0; i < Doors.Count; i++)
+        for (int i = 0; i < doors.Count; i++)
         {
-            AlgorithmsUtils.DebugRectInt(Doors[i], colors[4], 0, false, DungeonDrawHeight);
+            AlgorithmsUtils.DebugRectInt(doors[i], colors[4], 0, false, dungeonDrawHeight);
         }
 
         //Drawing Current Room
-        AlgorithmsUtils.DebugRectInt(CurrentRoom, colors[2], 0, false, DungeonDrawHeight);
+        AlgorithmsUtils.DebugRectInt(currentRoom, colors[2], 0, false, dungeonDrawHeight);
     }
 }

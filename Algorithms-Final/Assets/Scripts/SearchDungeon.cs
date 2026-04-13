@@ -7,18 +7,20 @@ using UnityEngine;
 
 public class SearchDungeon : Generator
 {
-    [HideInInspector]
-    public Graph<Vector3> RoomGraph;
-
     private NewDungeonGenerator DungeonGen;
     private GraphGenerator GraphGen;
 
-    public SearchAlgorithms<Vector3> searchAlgorithm;
+    private SearchAlgorithms<Vector3> searchAlgorithm;
 
-    public AudioSource CompleteSound;
     private bool Complete;
-
     private int j;
+
+    [HideInInspector]
+    public Graph<Vector3> RoomGraph;
+
+    [HideInInspector]
+    public bool allRoomsReachable, hasLoop;
+
 
 
     void Start()
@@ -65,19 +67,8 @@ public class SearchDungeon : Generator
 
         Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
 
-        var (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
+        (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
 
-        if (DungeonGen.AmountOfRoomsToDelete > 0)
-        {
-            if (allRoomsReachable)
-            {
-                DispatchOnNeededRepeatEvent();
-            }
-            else
-            {
-                DungeonGen.AddRoom();
-            }
-        }
         else
         {
             //Debug.Log("all rooms that needed to be deleted are gone");
