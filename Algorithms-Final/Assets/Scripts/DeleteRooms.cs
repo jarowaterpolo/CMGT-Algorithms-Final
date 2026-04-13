@@ -24,11 +24,21 @@ public class DeleteRooms : Generator
     {
         dungeonGen = GetComponent<NewDungeonGenerator>();
         searchDungeon = GetComponent<SearchDungeon>();
+
+        searchDungeon.OnEndGeneration += searchDungeonOnEndGeneration;
+    }
+
+    private void searchDungeonOnEndGeneration()
+    {
+        StartCoroutine(StartDeleting());
     }
 
     private IEnumerator StartDeleting()
     {
         checkedRooms.Clear();
+
+        DispatchOnStartGenerationEvent();
+
 
         amountOfRoomsToDelete = (int)(dungeonGen.doneRooms.Count * deletePercent / 100);
         Debug.Log("need to delete " + amountOfRoomsToDelete + " Rooms");
@@ -44,8 +54,11 @@ public class DeleteRooms : Generator
                 AddRoom();
             }
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-
+            //run bfs
+            searchDungeon.Search();
         }
+
+        DispatchOnEndGenerationEvent();
     }
 
     void DeleteRoom()

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class DeleteDoors : Generator
 {
     private NewDungeonGenerator dungeonGen;
     private SearchDungeon searchDungeon;
+    private DeleteRooms deleteRooms;
 
     private RectInt savedDoor;
 
@@ -15,6 +17,44 @@ public class DeleteDoors : Generator
     {
         dungeonGen = GetComponent<NewDungeonGenerator>();
         searchDungeon = GetComponent<SearchDungeon>();
+        deleteRooms = GetComponent<DeleteRooms>();
+
+        deleteRooms.OnEndGeneration += deleteRoomsOnEndGeneration;
+    }
+
+    private void deleteRoomsOnEndGeneration()
+    {
+        StartDeleting();
+    }
+
+    private IEnumerator StartDeleting()
+    {
+        DispatchOnStartGenerationEvent();
+
+        if (searchDungeon.hasLoop == true && searchDungeon.allRoomsReachable)
+        {
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            searchDungeon.Search();
+            StartDeleting();
+        }
+        else if (searchDungeon.hasLoop != true && searchDungeon.allRoomsReachable != true)
+        {
+            AddDoor();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            searchDungeon.Search();
+            StartDeleting();
+        }
+        else if (searchDungeon.allRoomsReachable == true && searchDungeon.hasLoop != true)
+        {
+            DispatchOnEndGenerationEvent();
+        }
+        else
+        {
+            AddDoor();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            searchDungeon.Search();
+            StartDeleting();
+        }
     }
 
     void MakeRandomizedDoorList()

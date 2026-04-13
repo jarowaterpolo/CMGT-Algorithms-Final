@@ -62,45 +62,24 @@ public class SearchDungeon : Generator
 
         if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
-        RoomGraph = GraphGen.RoomGraph;
-        var FirstRoom = RoomGraph.GetFirstKey();
-
-        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
-
-        (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
-
-        else
-        {
-            //Debug.Log("all rooms that needed to be deleted are gone");
-
-            if (hasLoop == true && allRoomsReachable)
-            {
-                //Debug.Log("dungeon still has a loop");
-                DispatchOnNeededRepeatEvent();
-            }
-            else if (hasLoop != true && allRoomsReachable != true)
-            {
-                //Debug.Log("dungeon door added");
-                DungeonGen.AddDoor();
-            }
-            else if (allRoomsReachable == true && hasLoop != true)
-            {
-                //Debug.Log("dungeon gen done");
-                DispatchOnEndGenerationEvent();
-            }
-            else
-            {
-                //Debug.Log("dungeon door added");
-                DungeonGen.AddDoor();
-            }
-
-            //Debug.Log(allRoomsReachable + "= room reachable & " + hasLoop + " = has loop ");
+        Search();
 
             ///
             /// bfs == spanning tree
             /// need to save it and break all connecions in dungeon that arent there in the new graph
             /// instead of repeating your search algorithm many times
             ///
-        }
+
+        DispatchOnEndGenerationEvent();
+    }
+
+    public void Search()
+    {
+        RoomGraph = GraphGen.RoomGraph;
+        var FirstRoom = RoomGraph.GetFirstKey();
+
+        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
+
+        (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
     }
 }
