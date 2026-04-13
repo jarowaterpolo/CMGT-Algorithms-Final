@@ -69,7 +69,7 @@ public class AddDungeonAssets : Generator
         yield return SpawnWallsForRooms();
         Debug.Log("Generating Rooms is done");
         //SpawnFloorsForRooms();
-        yield return StartCoroutine(SpawnFloorsForRooms());
+        yield return (SpawnFloorsForRooms());
         Debug.Log("Generating Floors is done");
 
         yield return null;
@@ -111,7 +111,7 @@ public class AddDungeonAssets : Generator
         foreach (var room in DungeonGen.DoneRooms)
         {
             //SpawnWallsForRoom(room);
-            yield return StartCoroutine(SpawnWallsForRoom(room));
+            yield return SpawnWallsForRoom(room);
         }
     }
 
@@ -177,7 +177,7 @@ public class AddDungeonAssets : Generator
         {
             var room = DungeonGen.DoneRooms[i];
             //SpawnFloorForRooms(room);
-            yield return StartCoroutine(SpawnFloorForRooms(room));
+            yield return SpawnFloorForRooms(room);
         }
 
         foreach (var door in DungeonGen.Doors)

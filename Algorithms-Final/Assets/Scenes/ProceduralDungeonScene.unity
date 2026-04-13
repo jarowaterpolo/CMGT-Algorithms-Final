@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536f0ec165bc1544b9ff06289261a878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -925,14 +925,14 @@ MonoBehaviour:
   minRoomSize:
     x: 0
     y: 0
-    width: 8
-    height: 8
+    width: 16
+    height: 16
   splitHorizontally: 0
   roomIndex: 0
   ShowDoneRooms: 1
   ShowOverlaps: 1
   DoorRandomRange: {x: 2, y: 7}
-  DoorSize: 1
+  DoorSize: 2
   DungeonDrawHeight: 5
   DeletePercent: 10
   DeleteSmallestRoom: 1
@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53f0d6bc6c5fb94cb24c756697e30c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -972,7 +972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f90d9e95173b64cab0ef47ce34162e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}

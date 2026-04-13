@@ -104,6 +104,12 @@ public class SearchDungeon : Generator
             }
 
             //Debug.Log(allRoomsReachable + "= room reachable & " + hasLoop + " = has loop ");
+
+            ///
+            /// bfs == spanning tree
+            /// need to save it and break all connecions in dungeon that arent there in the new graph
+            /// instead of repeating your search algorithm many times
+            ///
         }
     }
 }
