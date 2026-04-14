@@ -869,6 +869,8 @@ GameObject:
   - component: {fileID: 1082379050}
   - component: {fileID: 1082379052}
   - component: {fileID: 1082379053}
+  - component: {fileID: 1082379058}
+  - component: {fileID: 1082379057}
   - component: {fileID: 1082379055}
   - component: {fileID: 1082379054}
   - component: {fileID: 1082379056}
@@ -915,13 +917,13 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 0.2460165, g: 0, b: 1, a: 1}
   audioSource: {fileID: 992491517}
-  StartRoom:
+  startRoom:
   - x: 0
     y: 0
     width: 128
     height: 64
-  DoneRooms: []
-  Doors: []
+  doneRooms: []
+  doors: []
   minRoomSize:
     x: 0
     y: 0
@@ -929,16 +931,13 @@ MonoBehaviour:
     height: 16
   splitHorizontally: 0
   roomIndex: 0
-  ShowDoneRooms: 1
-  ShowOverlaps: 1
-  DoorRandomRange: {x: 2, y: 7}
-  DoorSize: 2
-  DungeonDrawHeight: 5
-  DeletePercent: 10
-  DeleteSmallestRoom: 1
+  showDoneRooms: 1
+  showOverlaps: 1
+  doorRandomRange: {x: 1, y: 7}
+  doorSize: 2
+  dungeonDrawHeight: 0
   seed: 1
   useRandomSeed: 0
-  AmountOfRoomsToDelete: 0
 --- !u!114 &1082379052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -982,7 +981,8 @@ MonoBehaviour:
   - {r: 255, g: 175, b: 0, a: 1}
   - {r: 0, g: 0.100931406, b: 1, a: 1}
   audioSource: {fileID: 249377955}
-  CompleteSound: {fileID: 1942093069}
+  allRoomsReachable: 0
+  hasLoop: 0
 --- !u!114 &1082379054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1008,7 +1008,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f05149e33f2a3647ac248d0f7f9158c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1044,6 +1044,52 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 1, a: 1}
   audioSource: {fileID: 0}
   navMesh: {fileID: 1746452695}
+--- !u!114 &1082379057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ce7160336a646409988fcaa67e3196, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitType: 1
+  splitDelay: 0.05
+  colors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 255, g: 175, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  audioSource: {fileID: 0}
+--- !u!114 &1082379058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81949ac535315ae4195aca886b8b46ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitType: 1
+  splitDelay: 0.05
+  colors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 255, g: 175, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  audioSource: {fileID: 0}
+  deletePercent: 10
+  deleteSmallestRoom: 1
 --- !u!1 &1641109709
 GameObject:
   m_ObjectHideFlags: 0

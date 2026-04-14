@@ -1,7 +1,6 @@
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class GraphGenerator : Generator
@@ -81,11 +80,20 @@ public class GraphGenerator : Generator
     public IEnumerator GenerateGraph()
     {
         Random.InitState(DungeonGen.seed);
-        //Debug.Log("Current Seed in use = " + DungeonGen.seed);
+        //Debug.Log("Current Seed in use = " + dungeonGen.seed);
 
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
 
+        yield return BuildGraph();
+
+        DispatchOnEndGenerationEvent();
+        yield return null;
+    }
+
+    IEnumerator BuildGraph()
+    {
+        //Debug.Log("building graph");
         RoomGraph = new();
         DoorGraph = new();
 
@@ -108,8 +116,11 @@ public class GraphGenerator : Generator
         }
 
         yield return null;
+    }
 
-        DispatchOnEndGenerationEvent();
+    public IEnumerator ReBuildGraph()
+    {
+        yield return BuildGraph();
     }
 
     void DrawAll()

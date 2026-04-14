@@ -3,11 +3,11 @@ using UnityEngine;
 public class Cam : MonoBehaviour
 {
     public Camera cam;
-    NewDungeonGenerator DungeonGen;
+    private NewDungeonGenerator dungeonGen;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        DungeonGen = FindAnyObjectByType<NewDungeonGenerator>();
+        dungeonGen = FindAnyObjectByType<NewDungeonGenerator>();
         // 128 - 64
         // 60 - 100 - 35
         ///
@@ -19,7 +19,7 @@ public class Cam : MonoBehaviour
     }
     public void UpdateCam()
     {
-        Vector3 CamPos = new(DungeonGen.startRoom[0].width / 128 * 60, 100 * (DungeonGen.startRoom[0].width / 256f + DungeonGen.startRoom[0].height / 128f), DungeonGen.startRoom[0].height / 64 * 35);
+        Vector3 CamPos = new(dungeonGen.startRoom[0].width / 128 * 60, 100 * (dungeonGen.startRoom[0].width / 256f + dungeonGen.startRoom[0].height / 128f), dungeonGen.startRoom[0].height / 64 * 35);
         cam.transform.position = CamPos;
     }
 }

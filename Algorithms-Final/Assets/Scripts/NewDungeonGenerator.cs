@@ -1,11 +1,6 @@
 using NaughtyAttributes;
-using NUnit.Framework.Internal.Commands;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 public class NewDungeonGenerator : Generator
@@ -47,22 +42,7 @@ public class NewDungeonGenerator : Generator
         cameraScript = GetComponent<Cam>();
 
         searchDungeon = GetComponent<SearchDungeon>();
-        //searchDungeon.OnNeededRepeat += searchDungeon_OnRepeatSearch;
     }
-
-    //private void searchDungeon_OnRepeatSearch()
-    //{
-    //    Debug.Log("need to delete " + amountOfRoomsToDelete + " Rooms");
-
-    //    if (amountOfRoomsToDelete > 0)
-    //    { 
-    //        DeleteRoom();
-    //    }
-    //    else
-    //    {
-    //        DeleteDoor();
-    //    }
-    //}
 
     void Update()
     {
@@ -168,9 +148,6 @@ public class NewDungeonGenerator : Generator
         }
 
         currentRoom = new();
-
-        ///testing purposes
-        //MakeRandomizedDoorList();
 
         DispatchOnEndGenerationEvent();
     }

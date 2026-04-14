@@ -1,18 +1,12 @@
-using NaughtyAttributes;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class AddDungeonAssets : Generator
 {
-    private NewDungeonGenerator DungeonGen;
-    private GraphGenerator GraphGen;
-    private SearchDungeon SearchDungeon;
+    private NewDungeonGenerator dungeonGen;
+    private GraphGenerator graphGen;
+    private DeleteDoors deleteDoors;
 
     [SerializeField]
     private GameObject Wall_Prefab;
@@ -31,27 +25,31 @@ public class AddDungeonAssets : Generator
     HashSet<Vector3> Wall_Positions = new();
     HashSet<Vector3> Floor_Positions = new();
 
-    private bool DoneGenerating;
-
     private void Start()
     {
-        DungeonGen = GetComponent<NewDungeonGenerator>();
-        GraphGen = GetComponent<GraphGenerator>();
-        SearchDungeon = GetComponent<SearchDungeon>();
+        dungeonGen = GetComponent<NewDungeonGenerator>();
+        graphGen = GetComponent<GraphGenerator>();
+        deleteDoors = GetComponent<DeleteDoors>();
 
-        DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
-        SearchDungeon.OnEndGeneration += searchDungeon_OnEndSearch;
+        dungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
+        deleteDoors.OnEndGeneration += deleteDoors_OnEndGeneration;
     }
 
     private void DungeonGen_OnStartGeneration()
     {
         StopAllCoroutines();
+
+        foreach (Transform child in parent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         SavedRoom = RectInt.zero;
         Wall_Positions.Clear();
         Floor_Positions.Clear();
     }
 
-    private void searchDungeon_OnEndSearch()
+    private void deleteDoors_OnEndGeneration()
     {
         StartCoroutine(SpawnDungeonAssets());
     }
@@ -74,7 +72,6 @@ public class AddDungeonAssets : Generator
 
         yield return null;
 
-        DoneGenerating = true;
         DispatchOnEndGenerationEvent();
     }
 
@@ -82,11 +79,11 @@ public class AddDungeonAssets : Generator
     {
         SavedRoom = RectInt.zero;
 
-        foreach (var door in DungeonGen.doors)
+        foreach (var door in dungeonGen.doors)
         {
-            if (DungeonGen.doorSize > 1)
+            if (dungeonGen.doorSize > 1)
             {
-                var doorSize = DungeonGen.doorSize;
+                var doorSize = dungeonGen.doorSize;
 
                 for (int i = 0; i < doorSize; i++)
                 {
@@ -108,7 +105,7 @@ public class AddDungeonAssets : Generator
             }
         }
 
-        foreach (var room in DungeonGen.doneRooms)
+        foreach (var room in dungeonGen.doneRooms)
         {
             //SpawnWallsForRoom(room);
             yield return SpawnWallsForRoom(room);
@@ -173,19 +170,19 @@ public class AddDungeonAssets : Generator
     {
         SavedRoom = RectInt.zero;
 
-        for (int i = 0; i <  DungeonGen.doneRooms.Count; i++)
+        for (int i = 0; i <  dungeonGen.doneRooms.Count; i++)
         {
-            var room = DungeonGen.doneRooms[i];
+            var room = dungeonGen.doneRooms[i];
             //SpawnFloorForRooms(room);
             yield return SpawnFloorForRooms(room);
         }
 
-        foreach (var door in DungeonGen.doors)
+        foreach (var door in dungeonGen.doors)
         {
             Vector3 SpawnPos = new();
-            if (DungeonGen.doorSize > 1)
+            if (dungeonGen.doorSize > 1)
             {
-                var doorSize = DungeonGen.doorSize;
+                var doorSize = dungeonGen.doorSize;
 
                 for (int i = 0; i < doorSize; i++)
                 {

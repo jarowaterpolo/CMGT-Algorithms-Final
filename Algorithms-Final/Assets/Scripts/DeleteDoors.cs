@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeleteDoors : Generator
 {
     private NewDungeonGenerator dungeonGen;
+    private GraphGenerator graphGen;
     private SearchDungeon searchDungeon;
     private DeleteRooms deleteRooms;
 
@@ -16,6 +17,7 @@ public class DeleteDoors : Generator
     private void Start()
     {
         dungeonGen = GetComponent<NewDungeonGenerator>();
+        graphGen = GetComponent<GraphGenerator>();
         searchDungeon = GetComponent<SearchDungeon>();
         deleteRooms = GetComponent<DeleteRooms>();
 
@@ -24,37 +26,48 @@ public class DeleteDoors : Generator
 
     private void deleteRoomsOnEndGeneration()
     {
-        StartDeleting();
+        Debug.Log("Start deleting doors");
+        StartCoroutine(StartDeleting());
     }
 
     private IEnumerator StartDeleting()
     {
         DispatchOnStartGenerationEvent();
 
-        if (searchDungeon.hasLoop == true && searchDungeon.allRoomsReachable)
+        while (searchDungeon.hasLoop || !searchDungeon.allRoomsReachable)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-            searchDungeon.Search();
-            StartDeleting();
+            if (searchDungeon.hasLoop == true && searchDungeon.allRoomsReachable)
+            {
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                MakeRandomizedDoorList();
+                DeleteDoor();
+                yield return graphGen.ReBuildGraph();
+                yield return searchDungeon.Search();
+                StartDeleting();
+            }
+            else if (searchDungeon.hasLoop != true && searchDungeon.allRoomsReachable != true)
+            {
+                AddDoor();
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                yield return graphGen.ReBuildGraph();
+                yield return searchDungeon.Search();
+                StartDeleting();
+            }
+            else if (searchDungeon.allRoomsReachable == true && searchDungeon.hasLoop != true)
+            {
+                DispatchOnEndGenerationEvent();
+            }
+            else
+            {
+                AddDoor();
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                yield return graphGen.ReBuildGraph();
+                yield return searchDungeon.Search();
+                StartDeleting();
+            }
         }
-        else if (searchDungeon.hasLoop != true && searchDungeon.allRoomsReachable != true)
-        {
-            AddDoor();
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-            searchDungeon.Search();
-            StartDeleting();
-        }
-        else if (searchDungeon.allRoomsReachable == true && searchDungeon.hasLoop != true)
-        {
-            DispatchOnEndGenerationEvent();
-        }
-        else
-        {
-            AddDoor();
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-            searchDungeon.Search();
-            StartDeleting();
-        }
+
+        DispatchOnEndGenerationEvent();
     }
 
     void MakeRandomizedDoorList()
@@ -80,13 +93,10 @@ public class DeleteDoors : Generator
         dungeonGen.doors.Remove(savedDoor);
 
         currentDeleteIndex++;
-
-        DispatchOnEndGenerationEvent();
     }
 
     public void AddDoor()
     {
         dungeonGen.doors.Add(savedDoor);
-        DispatchOnEndGenerationEvent();
     }
 }

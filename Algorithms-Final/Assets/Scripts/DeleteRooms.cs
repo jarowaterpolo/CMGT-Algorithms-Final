@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DeleteRooms : Generator
 {
     private NewDungeonGenerator dungeonGen;
+    private GraphGenerator graphGen;
     private SearchDungeon searchDungeon;
 
     public float deletePercent = 10;
@@ -23,6 +23,7 @@ public class DeleteRooms : Generator
     private void Start()
     {
         dungeonGen = GetComponent<NewDungeonGenerator>();
+        graphGen = GetComponent<GraphGenerator>();
         searchDungeon = GetComponent<SearchDungeon>();
 
         searchDungeon.OnEndGeneration += searchDungeonOnEndGeneration;
@@ -30,6 +31,7 @@ public class DeleteRooms : Generator
 
     private void searchDungeonOnEndGeneration()
     {
+        Debug.Log("Start deleting rooms");
         StartCoroutine(StartDeleting());
     }
 
@@ -43,19 +45,24 @@ public class DeleteRooms : Generator
         amountOfRoomsToDelete = (int)(dungeonGen.doneRooms.Count * deletePercent / 100);
         Debug.Log("need to delete " + amountOfRoomsToDelete + " Rooms");
 
-        while (amountOfRoomsToDelete > 0)
+        for (int i = 0; i < amountOfRoomsToDelete; i++)
         {
+            yield return null;
             if (searchDungeon.allRoomsReachable)
             {
                 DeleteRoom();
+                Debug.Log("room deleted");
             }
             else
             {
                 AddRoom();
+                Debug.Log("room added");
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             //run bfs
-            searchDungeon.Search();
+            //Debug.Log("try and rebuild graph and use bfs");
+            yield return graphGen.ReBuildGraph();
+            yield return searchDungeon.Search();
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
 
         DispatchOnEndGenerationEvent();
@@ -108,8 +115,6 @@ public class DeleteRooms : Generator
         }
 
         amountOfRoomsToDelete--;
-
-        DispatchOnEndGenerationEvent();
     }
 
     public void AddRoom()
@@ -121,10 +126,8 @@ public class DeleteRooms : Generator
             dungeonGen.doors.Add(door);
         }
 
-        amountOfRoomsToDelete++;
+        //amountOfRoomsToDelete++;
 
         savedDoors.Clear();
-
-        DispatchOnEndGenerationEvent();
     }
 }
