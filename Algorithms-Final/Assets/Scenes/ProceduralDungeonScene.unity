@@ -918,7 +918,7 @@ MonoBehaviour:
   - {r: 0.2460165, g: 0, b: 1, a: 1}
   audioSource: {fileID: 992491517}
   startRoom:
-  - x: 0
+    x: 0
     y: 0
     width: 128
     height: 64
@@ -982,7 +982,6 @@ MonoBehaviour:
   - {r: 0, g: 0.100931406, b: 1, a: 1}
   audioSource: {fileID: 249377955}
   allRoomsReachable: 0
-  hasLoop: 0
 --- !u!114 &1082379054
 MonoBehaviour:
   m_ObjectHideFlags: 0

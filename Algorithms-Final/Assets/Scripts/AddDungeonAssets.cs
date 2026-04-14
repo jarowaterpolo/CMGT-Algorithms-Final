@@ -96,12 +96,12 @@ public class AddDungeonAssets : Generator
                     {
                         doorOffset = new(0, 0, i);
                     }
-                    wallPositions.Add(new Vector3(door.x + .5f, 0, door.y + .5f) + doorOffset);
+                    wallPositions.Add(new Vector3(door.x, 0, door.y) + overallOffset + doorOffset);
                 }
             }
             else
             {
-                wallPositions.Add(new(door.x + .5f, 0, door.y + .5f));
+                wallPositions.Add(new Vector3(door.x, 0, door.y) + overallOffset);
             }
         }
 
@@ -116,52 +116,52 @@ public class AddDungeonAssets : Generator
     {
         for (int i = room.xMin; i < room.xMax; i++)
         {
-            Vector3 SpawnPos = new Vector3(i, 0, room.yMin) + overallOffset;
+            Vector3 spawnPos = new Vector3(i, 0, room.yMin) + overallOffset;
 
-            GameObject H_Wall_Front = AddWall(SpawnPos);
-            if (H_Wall_Front != null)
+            GameObject horizontalWallFront = AddWall(spawnPos);
+            if (horizontalWallFront != null)
             {
-                H_Wall_Front.name = "H_Wall_Front_" + i;
+                horizontalWallFront.name = "Horizontal_Wall_Front_" + i;
             }
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
-            SpawnPos.z = room.yMax - .5f;
+            spawnPos.z = room.yMax - .5f;
 
-            GameObject H_Wall_Back = AddWall(SpawnPos);
-            if (H_Wall_Back != null)
+            GameObject horizontalWallBack = AddWall(spawnPos);
+            if (horizontalWallBack != null)
             {
-                H_Wall_Back.name = "H_Wall_Back_" + i;
+                horizontalWallBack.name = "Horizontal_Wall_Back_" + i;
             }
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
 
         for (int i = room.yMin; i < room.yMax; i++)
         {
-            Vector3 SpawnPos = new Vector3(room.xMin, 0, i) + overallOffset;
+            Vector3 spawnPos = new Vector3(room.xMin, 0, i) + overallOffset;
 
-            GameObject V_Wall_Left = AddWall(SpawnPos);
-            if (V_Wall_Left != null)
+            GameObject verticalWallLeft = AddWall(spawnPos);
+            if (verticalWallLeft != null)
             {
-                V_Wall_Left.name = "V_Wall_Left_" + i;
+                verticalWallLeft.name = "Vertical_Wall_Left_" + i;
             }
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
 
-            SpawnPos.x = room.xMax - .5f;
+            spawnPos.x = room.xMax - .5f;
 
-            GameObject V_Wall_Right = AddWall(SpawnPos);
-            if (V_Wall_Right != null)
+            GameObject verticalWallRight = AddWall(spawnPos);
+            if (verticalWallRight != null)
             {
-                V_Wall_Right.name = "V_Wall_Right_" + i;
+                verticalWallRight.name = "Vertical_Wall_Right_" + i;
             }
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
     }
 
-    private GameObject AddWall(Vector3 SpawnPos)
+    private GameObject AddWall(Vector3 spawnPos)
     {
-        if (wallPositions.Contains(SpawnPos)) return null;
+        if (wallPositions.Contains(spawnPos)) return null;
 
-        GameObject Wall = Instantiate(wallPrefab, SpawnPos, Quaternion.identity, dungeonParent);
+        GameObject Wall = Instantiate(wallPrefab, spawnPos, Quaternion.identity, dungeonParent);
         wallPositions.Add(Wall.transform.position);
 
         return Wall;
@@ -195,7 +195,7 @@ public class AddDungeonAssets : Generator
                     {
                         doorOffset = new(0, 0, i);
                     }
-                    spawnPos = new Vector3(door.x + .5f, 0, door.y + .5f) + doorOffset;
+                    spawnPos = new Vector3(door.x, 0, door.y) + overallOffset + doorOffset;
                     GameObject floorPiece = AddFloor(spawnPos);
                     if (floorPiece != null)
                     {
@@ -206,7 +206,7 @@ public class AddDungeonAssets : Generator
             }
             else
             {
-                spawnPos = new(door.x + .5f, 0, door.y + .5f);
+                spawnPos = new Vector3(door.x, 0, door.y) + overallOffset;
                 GameObject floorPiece = AddFloor(spawnPos);
                 if (floorPiece != null)
                 {

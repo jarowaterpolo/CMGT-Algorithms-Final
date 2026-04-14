@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 public class NewDungeonGenerator : Generator
 {
-    public List<RectInt> startRoom;
+    public RectInt startRoom;
 
     private List<RectInt> toDoRooms = new();
     [HideInInspector]
@@ -122,7 +122,7 @@ public class NewDungeonGenerator : Generator
         DispatchOnStartGenerationEvent();
         audioSource.Play();
 
-        toDoRooms.Add(startRoom[0]);
+        toDoRooms.Add(startRoom);
 
         while (toDoRooms.Count > 0)
         {
