@@ -32,7 +32,9 @@ public class AddDungeonAssets : Generator
         deleteDoors = GetComponent<DeleteDoors>();
 
         dungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
-        deleteDoors.OnEndGeneration += deleteDoors_OnEndGeneration;
+
+
+        //deleteDoors.OnEndGeneration += deleteDoors_OnEndGeneration;
     }
 
     private void DungeonGen_OnStartGeneration()

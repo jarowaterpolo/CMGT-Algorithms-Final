@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &65454335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 65454336}
+  m_Layer: 0
+  m_Name: Floors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &65454336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65454335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1927546878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &75689119
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +903,9 @@ GameObject:
   - component: {fileID: 1082379058}
   - component: {fileID: 1082379057}
   - component: {fileID: 1082379055}
+  - component: {fileID: 1082379060}
+  - component: {fileID: 1082379059}
+  - component: {fileID: 1082379061}
   - component: {fileID: 1082379056}
   - component: {fileID: 1082379054}
   m_Layer: 0
@@ -1002,7 +1036,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082379047}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f05149e33f2a3647ac248d0f7f9158c, type: 3}
   m_Name: 
@@ -1089,6 +1123,124 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   deletePercent: 10
   deleteSmallestRoom: 1
+--- !u!114 &1082379059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04fe877046f119a4e8b0c6c20b3c58cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitType: 0
+  splitDelay: 0.05
+  colors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 255, g: 175, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  audioSource: {fileID: 0}
+  wallPrefabs:
+  - {fileID: 0}
+  - {fileID: 4582636957759119060, guid: fe6b5fe1256fdc149b358cfadebb5e26, type: 3}
+  - {fileID: 940077211948259963, guid: d1def8f48b70e3940adcf4c9c65cb153, type: 3}
+  - {fileID: 8283408766128426944, guid: 8892ec65f4ca98e47ae472de917bcea9, type: 3}
+  - {fileID: 4028524621357158221, guid: f650c8841799ce84c98dbb9349114a5d, type: 3}
+  - {fileID: 0}
+  - {fileID: 1941074536370243066, guid: 6a2424b9ae905fe488fb981940e0e6ab, type: 3}
+  - {fileID: 3335795965606059486, guid: d16b71dcfd13dcc4fa5b276c3f9bec79, type: 3}
+  - {fileID: 1214921310041745188, guid: 6effe8a4d97f9364f8ed3ec665152181, type: 3}
+  - {fileID: 259370585205061759, guid: 9ab6cbbfe83ce8f409a4ecb054008a72, type: 3}
+  - {fileID: 0}
+  - {fileID: 6969860062078217418, guid: a22c802d393bfc7459d42587c1dd9617, type: 3}
+  - {fileID: 2072931850068974256, guid: 9bd95f3e493fb4f4d8f68753d4fdd1ef, type: 3}
+  - {fileID: 1051797687766378976, guid: d9a06aaa0e6f282438511ad973ed665e, type: 3}
+  - {fileID: 3567019900442598999, guid: 12c3b8d4e51c8ef4e81fdb6451178cb1, type: 3}
+  - {fileID: 0}
+  dungeonParent: {fileID: 1466573102}
+--- !u!114 &1082379060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3abdd8b82a9d5548ba79eddb056dbd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitType: 0
+  splitDelay: 0.05
+  colors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 255, g: 175, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  audioSource: {fileID: 0}
+--- !u!114 &1082379061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082379047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8890280d330140845aa154f8ca002d72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splitType: 0
+  splitDelay: 0.05
+  colors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 255, g: 175, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  audioSource: {fileID: 0}
+  floorPrefabs:
+  - {fileID: 107208172493072213, guid: 5b4650b9db0659648b63c848a85a2437, type: 3}
+  dungeonParent: {fileID: 65454336}
+--- !u!1 &1466573101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1466573102}
+  m_Layer: 0
+  m_Name: Walls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1466573102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466573101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1927546878}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1641109709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,7 +1398,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1466573102}
+  - {fileID: 65454336}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1942093067

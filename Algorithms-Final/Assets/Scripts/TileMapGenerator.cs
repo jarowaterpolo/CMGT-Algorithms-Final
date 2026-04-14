@@ -1,22 +1,30 @@
 using UnityEngine;
-using System.Text;
-using NaughtyAttributes;
-
 public class TileMapGenerator : Generator
 {
     private NewDungeonGenerator dungeonGen;
+    private DeleteDoors deleteDoors;
 
     private int[,] tileMap;
     private void Start()
     {
         dungeonGen = GetComponent<NewDungeonGenerator>();
+        deleteDoors = GetComponent<DeleteDoors>();
+
+        deleteDoors.OnEndGeneration += deleteDoors_OnEndGeneration;
+    }
+
+    private void deleteDoors_OnEndGeneration()
+    {
+        GenerateTileMap();
     }
 
     public void GenerateTileMap()
     {
+        DispatchOnStartGenerationEvent();
+
         int[,] tilemap = new int[dungeonGen.startRoom.height, dungeonGen.startRoom.width];
-        int rows = tileMap.GetLength(0);
-        int cols = tileMap.GetLength(1);
+        int rows = tilemap.GetLength(0);
+        int cols = tilemap.GetLength(1);
 
         for (int i = 0; i < rows; i++) 
         {
@@ -37,5 +45,12 @@ public class TileMapGenerator : Generator
         }
 
         tileMap = tilemap;
+
+        DispatchOnEndGenerationEvent();
+    }
+
+    public int[,] GetTileMap()
+    {
+        return tileMap;
     }
 }
