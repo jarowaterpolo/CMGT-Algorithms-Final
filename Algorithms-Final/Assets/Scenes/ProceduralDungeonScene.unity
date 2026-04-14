@@ -872,8 +872,8 @@ GameObject:
   - component: {fileID: 1082379058}
   - component: {fileID: 1082379057}
   - component: {fileID: 1082379055}
-  - component: {fileID: 1082379054}
   - component: {fileID: 1082379056}
+  - component: {fileID: 1082379054}
   m_Layer: 0
   m_Name: ---Dungeon_Generator--- (1)
   m_TagString: Untagged
@@ -1018,9 +1018,9 @@ MonoBehaviour:
   - {r: 255, g: 175, b: 0, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
   audioSource: {fileID: 0}
-  Wall_Prefab: {fileID: 8344589110478581656, guid: 4dcd41b693e17c44fa969b4c756301a0, type: 3}
-  Floor_Prefab: {fileID: 107208172493072213, guid: 5b4650b9db0659648b63c848a85a2437, type: 3}
-  parent: {fileID: 1927546878}
+  wallPrefab: {fileID: 8344589110478581656, guid: 4dcd41b693e17c44fa969b4c756301a0, type: 3}
+  floorPrefab: {fileID: 107208172493072213, guid: 5b4650b9db0659648b63c848a85a2437, type: 3}
+  dungeonParent: {fileID: 75689124}
 --- !u!114 &1082379056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1057,7 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitType: 1
-  splitDelay: 0.05
+  splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}

@@ -58,8 +58,7 @@ public class DeleteRooms : Generator
                 AddRoom();
                 Debug.Log("room added");
             }
-            //run bfs
-            //Debug.Log("try and rebuild graph and use bfs");
+
             yield return graphGen.ReBuildGraph();
             yield return searchDungeon.Search();
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
@@ -84,13 +83,9 @@ public class DeleteRooms : Generator
                 int smallestRoomSize = smallestRoom.width * smallestRoom.height;
                 int currentRoomSize = room.width * room.height;
 
-                //Debug.Log($"currentRoom: {room} Size: {currentRoomSize}");
-                //Debug.Log($"SmallestRoom: {smallestRoom} Size: {smallestRoomSize}");
-
                 if (currentRoomSize < smallestRoomSize && !checkedRooms.Contains(room))
                 {
                     smallestRoom = room;
-                    //Debug.Log($"Room: {room} Size: {currentRoomSize}");
                 }
             }
 

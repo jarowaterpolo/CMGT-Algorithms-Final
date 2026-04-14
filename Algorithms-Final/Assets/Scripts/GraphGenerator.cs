@@ -125,15 +125,18 @@ public class GraphGenerator : Generator
 
     void DrawAll()
     {
-        if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
+        if (RoomGraph != null)
         {
-            foreach (var node in RoomGraph.GetKeyList())
+            if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
             {
-                DebugExtension.DebugWireSphere(node, colors[2]);
-
-                foreach (var value in RoomGraph.GetNeighbors(node))
+                foreach (var node in RoomGraph.GetKeyList())
                 {
-                    Debug.DrawLine(node, value, colors[2]);
+                    DebugExtension.DebugWireSphere(node, colors[2]);
+
+                    foreach (var value in RoomGraph.GetNeighbors(node))
+                    {
+                        Debug.DrawLine(node, value, colors[2]);
+                    }
                 }
             }
         }

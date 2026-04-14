@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DeleteDoors : Generator
@@ -34,69 +35,29 @@ public class DeleteDoors : Generator
     {
         DispatchOnStartGenerationEvent();
 
-        while (searchDungeon.hasLoop || !searchDungeon.allRoomsReachable)
-        {
-            if (searchDungeon.hasLoop == true && searchDungeon.allRoomsReachable)
-            {
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-                MakeRandomizedDoorList();
-                DeleteDoor();
-                yield return graphGen.ReBuildGraph();
-                yield return searchDungeon.Search();
-                StartDeleting();
-            }
-            else if (searchDungeon.hasLoop != true && searchDungeon.allRoomsReachable != true)
-            {
-                AddDoor();
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-                yield return graphGen.ReBuildGraph();
-                yield return searchDungeon.Search();
-                StartDeleting();
-            }
-            else if (searchDungeon.allRoomsReachable == true && searchDungeon.hasLoop != true)
-            {
-                DispatchOnEndGenerationEvent();
-            }
-            else
-            {
-                AddDoor();
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
-                yield return graphGen.ReBuildGraph();
-                yield return searchDungeon.Search();
-                StartDeleting();
-            }
-        }
+        yield return NewDoorDeletion();
 
         DispatchOnEndGenerationEvent();
     }
 
-    void MakeRandomizedDoorList()
+    IEnumerator NewDoorDeletion()
     {
-        randomDoors = new(dungeonGen.doors);
-
-        for (int i = 0; i < randomDoors.Count; i++)
+        foreach (var door in dungeonGen.doors.ToList())
         {
-            RectInt temp = randomDoors[i];
-            int RI = Random.Range(i, randomDoors.Count);
-            randomDoors[i] = randomDoors[RI];
-            randomDoors[RI] = temp;
+            Vector3 doorMiddle = new(door.x + door.width / 2f, 0, door.y + door.height / 2f);
+
+            if (!searchDungeon.Adjacents.ContainsKey(doorMiddle))
+            {
+                Debug.Log($"removed door {door}");
+                dungeonGen.doors.Remove(door);
+            }
+
+            //if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+
         }
 
-        currentDeleteIndex = 0;
-    }
-    void DeleteDoor()
-    {
-        //int randomIndex = Random.Range(0, doors.Count);
-        //savedDoor = doors[randomIndex];
-
-        savedDoor = randomDoors[currentDeleteIndex];
-        dungeonGen.doors.Remove(savedDoor);
-
-        currentDeleteIndex++;
-    }
-
-    public void AddDoor()
-    {
-        dungeonGen.doors.Add(savedDoor);
+        yield return graphGen.ReBuildGraph();
+        yield return searchDungeon.Search();
+        if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
     }
 }

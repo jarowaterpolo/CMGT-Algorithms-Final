@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SearchDungeon : Generator
@@ -17,7 +18,8 @@ public class SearchDungeon : Generator
     public Graph<Vector3> RoomGraph;
 
     [HideInInspector]
-    public bool allRoomsReachable, hasLoop;
+    public bool allRoomsReachable;
+    public Dictionary<Vector3, List<Vector3>> Adjacents;
 
 
 
@@ -52,19 +54,12 @@ public class SearchDungeon : Generator
     public IEnumerator SearchDungeonGraph()
     {
         UnityEngine.Random.InitState(DungeonGen.seed);
-        //Debug.Log("Current Seed in use = " + dungeonGen.seed);
 
-        //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
         j++;
 
         yield return Search();
 
-            ///
-            /// bfs == spanning tree
-            /// need to save it and break all connecions in dungeon that arent there in the new graph
-            /// instead of repeating your search algorithm many times
-            ///
         yield return null;
 
         DispatchOnEndGenerationEvent();
@@ -75,10 +70,9 @@ public class SearchDungeon : Generator
         RoomGraph = GraphGen.RoomGraph;
         var FirstRoom = RoomGraph.GetFirstKey();
 
-        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node + new Vector3(0, 0, 0), colors[5], 1, 3);
+        Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node /*+ new Vector3(0, 0, 0)*/, colors[5], 1, 3);
 
-        (allRoomsReachable, hasLoop) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
-        Debug.Log($"all rooms reachable == {allRoomsReachable}, an there are loops == {hasLoop}");
+        (allRoomsReachable, Adjacents) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
 
         if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
     }

@@ -98,7 +98,7 @@ public class DebugDrawingBatcher : MonoBehaviour
     /// <param name="pName">The channel name used to build the GameObject name.</param>
     /// <returns>The newly created batcher component.</returns>
     /// <remarks>
-    /// This method does not set hide flags, parent transforms, or DontDestroyOnLoad.
+    /// This method does not set hide flags, dungeonParent transforms, or DontDestroyOnLoad.
     /// It creates a normal scene object.
     /// </remarks>
     private static DebugDrawingBatcher CreateInstance(string pName)

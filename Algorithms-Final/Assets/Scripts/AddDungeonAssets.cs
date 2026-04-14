@@ -9,21 +9,21 @@ public class AddDungeonAssets : Generator
     private DeleteDoors deleteDoors;
 
     [SerializeField]
-    private GameObject Wall_Prefab;
+    private GameObject wallPrefab;
 
     [SerializeField]
-    private GameObject Floor_Prefab;
+    private GameObject floorPrefab;
 
     [SerializeField]
-    private Transform parent;
+    private Transform dungeonParent;
 
-    private RectInt SavedRoom;
+    private RectInt savedRoom;
 
-    private Vector3 Offset = new(.5f, 0, .5f);
-    private Vector3 DoorOffset = new();
+    private Vector3 overallOffset = new(.5f, 0, .5f);
+    private Vector3 doorOffset = new();
 
-    HashSet<Vector3> Wall_Positions = new();
-    HashSet<Vector3> Floor_Positions = new();
+    HashSet<Vector3> wallPositions = new();
+    HashSet<Vector3> floorPositions = new();
 
     private void Start()
     {
@@ -39,14 +39,14 @@ public class AddDungeonAssets : Generator
     {
         StopAllCoroutines();
 
-        foreach (Transform child in parent.transform)
+        foreach (Transform child in dungeonParent.transform)
         {
             Destroy(child.gameObject);
         }
 
-        SavedRoom = RectInt.zero;
-        Wall_Positions.Clear();
-        Floor_Positions.Clear();
+        savedRoom = RectInt.zero;
+        wallPositions.Clear();
+        floorPositions.Clear();
     }
 
     private void deleteDoors_OnEndGeneration()
@@ -59,7 +59,7 @@ public class AddDungeonAssets : Generator
     {
         DispatchOnStartGenerationEvent();
 
-        foreach (Transform child in parent.transform)
+        foreach (Transform child in dungeonParent.transform)
         {
             Destroy(child.gameObject);
         }
@@ -77,7 +77,7 @@ public class AddDungeonAssets : Generator
 
     private IEnumerator SpawnWallsForRooms()
     {
-        SavedRoom = RectInt.zero;
+        savedRoom = RectInt.zero;
 
         foreach (var door in dungeonGen.doors)
         {
@@ -87,21 +87,21 @@ public class AddDungeonAssets : Generator
 
                 for (int i = 0; i < doorSize; i++)
                 {
-                    Debug.Log("doorsize = " + i);
+                    //Debug.Log("doorsize = " + i);
                     if (door.width > door.height)
                     {
-                        DoorOffset = new(i, 0, 0);
+                        doorOffset = new(i, 0, 0);
                     }
                     else
                     {
-                        DoorOffset = new(0, 0, i);
+                        doorOffset = new(0, 0, i);
                     }
-                    Wall_Positions.Add(new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOffset);
+                    wallPositions.Add(new Vector3(door.x + .5f, 0, door.y + .5f) + doorOffset);
                 }
             }
             else
             {
-                Wall_Positions.Add(new(door.x + .5f, 0, door.y + .5f));
+                wallPositions.Add(new(door.x + .5f, 0, door.y + .5f));
             }
         }
 
@@ -116,7 +116,7 @@ public class AddDungeonAssets : Generator
     {
         for (int i = room.xMin; i < room.xMax; i++)
         {
-            Vector3 SpawnPos = new Vector3(i, 0, room.yMin) + Offset;
+            Vector3 SpawnPos = new Vector3(i, 0, room.yMin) + overallOffset;
 
             GameObject H_Wall_Front = AddWall(SpawnPos);
             if (H_Wall_Front != null)
@@ -137,7 +137,7 @@ public class AddDungeonAssets : Generator
 
         for (int i = room.yMin; i < room.yMax; i++)
         {
-            Vector3 SpawnPos = new Vector3(room.xMin, 0, i) + Offset;
+            Vector3 SpawnPos = new Vector3(room.xMin, 0, i) + overallOffset;
 
             GameObject V_Wall_Left = AddWall(SpawnPos);
             if (V_Wall_Left != null)
@@ -159,16 +159,16 @@ public class AddDungeonAssets : Generator
 
     private GameObject AddWall(Vector3 SpawnPos)
     {
-        if (Wall_Positions.Contains(SpawnPos)) return null;
+        if (wallPositions.Contains(SpawnPos)) return null;
 
-        GameObject Wall = Instantiate(Wall_Prefab, SpawnPos, Quaternion.identity, parent);
-        Wall_Positions.Add(Wall.transform.position);
+        GameObject Wall = Instantiate(wallPrefab, SpawnPos, Quaternion.identity, dungeonParent);
+        wallPositions.Add(Wall.transform.position);
 
         return Wall;
     }
     private IEnumerator SpawnFloorsForRooms()
     {
-        SavedRoom = RectInt.zero;
+        savedRoom = RectInt.zero;
 
         for (int i = 0; i <  dungeonGen.doneRooms.Count; i++)
         {
@@ -179,38 +179,38 @@ public class AddDungeonAssets : Generator
 
         foreach (var door in dungeonGen.doors)
         {
-            Vector3 SpawnPos = new();
+            Vector3 spawnPos = new();
             if (dungeonGen.doorSize > 1)
             {
                 var doorSize = dungeonGen.doorSize;
 
                 for (int i = 0; i < doorSize; i++)
                 {
-                    Debug.Log("doorsize = " + i);
+                    //Debug.Log("doorsize = " + i);
                     if (door.width > door.height)
                     {
-                        DoorOffset = new(i, 0, 0);
+                        doorOffset = new(i, 0, 0);
                     }
                     else
                     {
-                        DoorOffset = new(0, 0, i);
+                        doorOffset = new(0, 0, i);
                     }
-                    SpawnPos = new Vector3(door.x + .5f, 0, door.y + .5f) + DoorOffset;
-                    GameObject FloorPiece = AddFloor(SpawnPos);
-                    if (FloorPiece != null)
+                    spawnPos = new Vector3(door.x + .5f, 0, door.y + .5f) + doorOffset;
+                    GameObject floorPiece = AddFloor(spawnPos);
+                    if (floorPiece != null)
                     {
-                        FloorPiece.name = "Floor_Piece_Door";
+                        floorPiece.name = "Floor_Piece_Door";
                     }
                     if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
                 }
             }
             else
             {
-                SpawnPos = new(door.x + .5f, 0, door.y + .5f);
-                GameObject FloorPiece = AddFloor(SpawnPos);
-                if (FloorPiece != null)
+                spawnPos = new(door.x + .5f, 0, door.y + .5f);
+                GameObject floorPiece = AddFloor(spawnPos);
+                if (floorPiece != null)
                 {
-                    FloorPiece.name = "Floor_Piece_Door";
+                    floorPiece.name = "Floor_Piece_Door";
                 }
                 if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             }
@@ -223,26 +223,26 @@ public class AddDungeonAssets : Generator
         {
             for (int j = room.yMin + 1; j < room.yMax - 1; j++)
             {
-                Vector3 SpawnPos = new Vector3(i, 0, j) + Offset;
+                Vector3 spawnPos = new Vector3(i, 0, j) + overallOffset;
 
-                GameObject FloorPiece = AddFloor(SpawnPos);
-                if (FloorPiece != null)
+                GameObject floorPiece = AddFloor(spawnPos);
+                if (floorPiece != null)
                 {
-                    FloorPiece.name = "Floor_Piece_" + i;
+                    floorPiece.name = "Floor_Piece_" + i;
                 }
                 if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             }
         }
     }
 
-    private GameObject AddFloor(Vector3 SpawnPos)
+    private GameObject AddFloor(Vector3 spawnPos)
     {
-        if (Floor_Positions.Contains(SpawnPos)) return null;
+        if (floorPositions.Contains(spawnPos)) return null;
 
-        GameObject FloorPiece = Instantiate(Floor_Prefab, SpawnPos, Quaternion.Euler(90, 0, 0), parent);
-        Floor_Positions.Add(FloorPiece.transform.position);
+        GameObject floorPiece = Instantiate(floorPrefab, spawnPos, Quaternion.Euler(90, 0, 0), dungeonParent);
+        floorPositions.Add(floorPiece.transform.position);
 
-        return FloorPiece;
+        return floorPiece;
     }
 
 }
