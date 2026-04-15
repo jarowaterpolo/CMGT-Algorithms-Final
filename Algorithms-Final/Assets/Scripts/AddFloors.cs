@@ -55,6 +55,8 @@ public class AddFloors : Generator
 
     private IEnumerator FloodFill()
     {
+        DispatchOnStartGenerationEvent();
+
         var StartNode = dungeonGen.doors[0].position;
 
         Queue<Vector2Int> ToDo = new();
@@ -80,6 +82,8 @@ public class AddFloors : Generator
 
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
+
+        DispatchOnEndGenerationEvent();
     }
 
     private List<Vector2Int> GetNeighbors(Vector2Int pos)
