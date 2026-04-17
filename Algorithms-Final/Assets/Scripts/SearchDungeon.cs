@@ -72,7 +72,7 @@ public class SearchDungeon : Generator
 
         Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node /*+ new Vector3(0, 0, 0)*/, colors[5], 1, 3);
 
-        (allRoomsReachable, Adjacents) = searchAlgorithm.BFS(RoomGraph, FirstRoom, DrawCircleNode);
+        (allRoomsReachable, Adjacents) = searchAlgorithm.BFS_DungeonGeneration(RoomGraph, FirstRoom, DrawCircleNode);
 
         if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
     }
