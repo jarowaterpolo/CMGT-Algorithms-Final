@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TileMapGraph : Generator
@@ -13,7 +14,19 @@ public class TileMapGraph : Generator
     private List<Vector3> nodePositions = new();
     private Graph<Vector3> graphNodes = new();
 
-    private Vector2Int[] directions =
+    private Vector3Int[] directions3D =
+{
+        new(-1,0,-1),
+        new(0,0,-1),
+        new(1,0,-1),
+        new(-1,0,0),
+        new(1,0,0),
+        new(-1,0,1),
+        new(0,0,1),
+        new(1,0,1)
+    };
+
+    private Vector2Int[] directions2D =
 {
         new(-1,-1),
         new(0,-1),
@@ -41,8 +54,14 @@ public class TileMapGraph : Generator
 
     private void AddFloors_OnEndGeneration()
     {
-        StartCoroutine(FloodFill());
-        AddGraphNodes();
+        StartCoroutine(CreateTileMapGraph());
+    }
+
+    private IEnumerator CreateTileMapGraph()
+    {
+        yield return FloodFill();
+        yield return AddGraphNodes();
+        yield return AddGraphEdges();
     }
 
     private IEnumerator FloodFill()
@@ -72,34 +91,57 @@ public class TileMapGraph : Generator
                 }
             }
 
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
+            yield return null;
     }
 
     private List<Vector2Int> GetNeighbors(Vector2Int pos)
     {
         List<Vector2Int> neighbors = new();
 
-        foreach (var dir in directions)
+        foreach (var dir in directions2D)
         {
             neighbors.Add(pos + dir);
         }
         return neighbors;
     }
 
-    private void AddGraphNodes()
+    private IEnumerator AddGraphNodes()
     {
         foreach(var node in nodePositions)
         {
             graphNodes.AddNode(node);
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+        }
+    }
+
+    private IEnumerator AddGraphEdges()
+    {
+        foreach (var node in graphNodes.GetKeyList())
+        {
+            foreach (var dir in directions3D)
+            {
+                if (!graphNodes.GetKeyList().Contains(node + dir) || graphNodes.GetNeighbors(node).Contains(node + dir)) continue;
+                graphNodes.AddEdge(node, node + dir);
+                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            }
         }
     }
 
     private void Draw()
     {
-        foreach (var node in nodePositions)
+        foreach (var node in graphNodes.GetKeyList())
         {
             DebugExtension.DebugPoint(node, Color.red, 1);
+
+            var edges = graphNodes.GetNeighbors(node);
+            if (edges != null)
+            {
+                foreach (var edge in edges)
+                {
+                    Debug.DrawLine(node, edge, Color.cyan, 1);
+                }
+            }
         }
     }
 }

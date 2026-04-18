@@ -1198,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890280d330140845aa154f8ca002d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1224,7 +1224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitType: 1
-  splitDelay: 0.05
+  splitDelay: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
