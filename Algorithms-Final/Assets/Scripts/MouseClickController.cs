@@ -3,9 +3,12 @@ using UnityEngine.Events;
 
 public class MouseClickController : MonoBehaviour
 {
-    public Vector3 clickPosition;
-
-    public UnityEvent<Vector3> mouseClick;
+    [SerializeField]
+    private GameObject player;
+    [SerializeField]
+    private Vector3 clickPosition;
+    [SerializeField]
+    private UnityEvent<Vector3> mouseClick;
     
     void Update() { 
         // Get the mouse click position in world space 
