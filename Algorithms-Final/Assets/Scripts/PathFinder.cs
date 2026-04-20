@@ -38,11 +38,13 @@ public class PathFinder : Generator
         Vector3 closestNode = Vector3.zero;
         float closestDistance = Mathf.Infinity;
 
-        foreach (var node in graph.GetKeyList())
+        foreach (var node in graph.GetKeys())
         {
-            if (Vector3.Distance(node, position) < closestDistance)
+            float dist = (node - position).sqrMagnitude;
+
+            if (dist < closestDistance)
             {
-                closestDistance = Vector3.Distance(node, position);
+                closestDistance = dist;
                 closestNode = node;
             }
         }

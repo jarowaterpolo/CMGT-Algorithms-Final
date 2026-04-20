@@ -40,6 +40,16 @@ public class Graph<T>
         return new List<T>(adjacencyList.Keys);
     }
 
+    public IEnumerable<T> GetKeys()
+    {
+        return adjacencyList.Keys;
+    }
+
+    public bool ContainsNode(T node)
+    {
+        return adjacencyList.ContainsKey(node);
+    }
+
     public List<T> GetNeighbors(T node)
     {
         return new List<T>(adjacencyList[node]);

@@ -118,20 +118,27 @@ public class TileMapGraph : Generator
 
     private IEnumerator AddGraphEdges()
     {
-        foreach (var node in graphNodes.GetKeyList())
+        var nodeSet = new HashSet<Vector3>(graphNodes.GetKeys());
+
+        foreach (var node in nodeSet)
         {
+            var neighbors = graphNodes.GetNeighbors(node);
+
             foreach (var dir in directions3D)
             {
-                if (!graphNodes.GetKeyList().Contains(node + dir) || graphNodes.GetNeighbors(node).Contains(node + dir)) continue;
+                var neighbor = node + dir;
+
+                if (!nodeSet.Contains(neighbor) || neighbors.Contains(neighbor)) continue;
+
                 graphNodes.AddEdge(node, node + dir);
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             }
+            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
         }
     }
 
     private void Draw()
     {
-        foreach (var node in graphNodes.GetKeyList())
+        foreach (var node in graphNodes.GetKeys())
         {
             DebugExtension.DebugPoint(node, Color.red, 1);
 
