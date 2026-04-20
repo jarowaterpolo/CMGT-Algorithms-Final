@@ -12,7 +12,8 @@ public class TileMapGraph : Generator
     private AddFloors addFloors;
 
     private List<Vector3> nodePositions = new();
-    private Graph<Vector3> graphNodes = new();
+    [HideInInspector]
+    public Graph<Vector3> graphNodes = new();
 
     private Vector3Int[] directions3D =
 {
