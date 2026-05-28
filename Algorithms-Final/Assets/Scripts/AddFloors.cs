@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 using UnityEngine;
 
 public class AddFloors : Generator
@@ -50,7 +51,8 @@ public class AddFloors : Generator
     private void addWalls_OnEndGeneration()
     {
         tileMap = tileMapGen.GetTileMap();
-        StartCoroutine(FloodFill());
+        //StartCoroutine(FloodFill());
+        RecursiveFloodFill();
     }
 
     private IEnumerator FloodFill()
@@ -84,6 +86,32 @@ public class AddFloors : Generator
         }
 
         DispatchOnEndGenerationEvent();
+    }
+
+    private void RecursiveFloodFill()
+    {
+        DispatchOnStartGenerationEvent();
+
+        var StartNode = dungeonGen.doors[0].position;
+
+        HashSet<Vector2Int> DiscoveredNodes = new();
+        DiscoveredNodes.Add(StartNode);
+        FloodFillRecursion(DiscoveredNodes, StartNode);
+        Debug.Log("discovered nodes count = " + DiscoveredNodes.Count);
+        DispatchOnEndGenerationEvent();
+    }
+
+    private void FloodFillRecursion(HashSet<Vector2Int> discovered, Vector2Int node)
+    {
+        Instantiate(floorPrefabs[0], new Vector3(node.x + .5f, 0, node.y + .5f), Quaternion.Euler(90, 0, 0), dungeonParent);
+        foreach(var neighbor in GetNeighbors(node))
+        {
+            if (!discovered.Contains(neighbor) && tileMap[neighbor.y, neighbor.x] != 1)
+            {
+                discovered.Add(neighbor);
+                FloodFillRecursion(discovered, neighbor);
+            }
+        }
     }
 
     private List<Vector2Int> GetNeighbors(Vector2Int pos)

@@ -124,12 +124,14 @@ public class NewDungeonGenerator : Generator
 
         toDoRooms.Add(startRoom);
 
+        //O(log(n))
         while (toDoRooms.Count > 0)
         {
             if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
             SplitRandom();
         }
 
+        //O(n^2)
         for (int i = 0; i < doneRooms.Count; i++)
         {
             for (int j = i + 1; j < doneRooms.Count; j++)

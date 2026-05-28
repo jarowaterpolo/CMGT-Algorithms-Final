@@ -81,7 +81,7 @@ public class TileMapGraph : Generator
             var currentNode = ToDo.Dequeue();
 
             nodePositions.Add(new Vector3(currentNode.x + .5f, 0, currentNode.y + .5f));
-            Debug.Log("tile map graphnode added");
+            //Debug.Log("tile map graphnode added");
 
             foreach (var neighbor in GetNeighbors(currentNode))
             {

@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3abdd8b82a9d5548ba79eddb056dbd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1227,7 +1227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890280d330140845aa154f8ca002d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  splitType: 1
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4878fca553ca14ab04b93761fad27d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  splitType: 0
   splitDelay: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
