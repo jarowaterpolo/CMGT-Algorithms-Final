@@ -8,6 +8,9 @@ public class Cam : MonoBehaviour
     void Start()
     {
         dungeonGen = FindAnyObjectByType<NewDungeonGenerator>();
+        // 64 - 32
+        // 30 - 50 - 15
+
         // 128 - 64
         // 60 - 100 - 35
         ///
@@ -19,7 +22,7 @@ public class Cam : MonoBehaviour
     }
     public void UpdateCam()
     {
-        Vector3 CamPos = new(dungeonGen.startRoom.width / 128 * 60, 100 * (dungeonGen.startRoom.width / 256f + dungeonGen.startRoom.height / 128f), dungeonGen.startRoom.height / 64 * 35);
+        Vector3 CamPos = new(dungeonGen.startRoom.width / 256f * 120f, 100f * (dungeonGen.startRoom.width / 256f + dungeonGen.startRoom.height / 128f), dungeonGen.startRoom.height / 64f * 35f);
         cam.transform.position = CamPos;
     }
 }

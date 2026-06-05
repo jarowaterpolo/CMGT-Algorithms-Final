@@ -54,7 +54,7 @@ public class AddFloors : Generator
     {
         tileMap = tileMapGen.GetTileMap();
 
-        if (UseRecursive)
+        if (UseRecursive && !(dungeonGen.startRoom.width > 64))
         {
             RecursiveFloodFill();
         }
@@ -119,6 +119,10 @@ public class AddFloors : Generator
             {
                 discovered.Add(neighbor);
                 FloodFillRecursion(discovered, neighbor);
+            }
+            else if (!discovered.Contains(neighbor))
+            {
+                discovered.Add(neighbor);
             }
         }
     }

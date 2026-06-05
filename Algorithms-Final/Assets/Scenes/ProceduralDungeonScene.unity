@@ -666,18 +666,6 @@ MonoBehaviour:
   mouseClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 75689120}
-        m_TargetAssemblyTypeName: UnityEngine.AI.NavMeshAgent, UnityEngine
-        m_MethodName: set_destination
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 75689125}
         m_TargetAssemblyTypeName: FollowPathController, Assembly-CSharp
         m_MethodName: GoToDestination
@@ -984,8 +972,8 @@ MonoBehaviour:
   startRoom:
     x: 0
     y: 0
-    width: 128
-    height: 64
+    width: 64
+    height: 32
   Player: {fileID: 75689124}
   doneRooms: []
   doors: []
@@ -1002,7 +990,7 @@ MonoBehaviour:
   doorSize: 2
   dungeonDrawHeight: 0
   Seed: 0
-  useRandomSeed: 0
+  useRandomSeed: 1
 --- !u!114 &1082379052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1241,7 +1229,7 @@ MonoBehaviour:
   floorPrefabs:
   - {fileID: 107208172493072213, guid: 5b4650b9db0659648b63c848a85a2437, type: 3}
   dungeonParent: {fileID: 65454336}
-  UseRecursive: 0
+  UseRecursive: 1
 --- !u!114 &1082379062
 MonoBehaviour:
   m_ObjectHideFlags: 0
