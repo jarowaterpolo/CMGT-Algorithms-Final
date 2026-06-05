@@ -5,29 +5,29 @@ using UnityEngine;
 
 public class GraphGenerator : Generator
 {
-    private List<RectInt> DoneRooms = new();
+    private List<RectInt> doneRooms = new();
     private List<RectInt> Doors = new();
 
     [HideInInspector]
-    public Graph<Vector3> RoomGraph;
+    public Graph<Vector3> roomGraph;
     [HideInInspector]
-    public Graph<Vector3> DoorGraph;
+    public Graph<Vector3> doorGraph;
 
-    private NewDungeonGenerator DungeonGen;
+    private NewDungeonGenerator dungeonGen;
 
     private int j;
 
     void Start()
     {
-        DungeonGen = GetComponent<NewDungeonGenerator>();
-        DoneRooms = DungeonGen.doneRooms;
-        Doors = DungeonGen.doors;
+        dungeonGen = GetComponent<NewDungeonGenerator>();
+        doneRooms = dungeonGen.doneRooms;
+        Doors = dungeonGen.doors;
 
-        RoomGraph = new Graph<Vector3>();
-        DoorGraph = new Graph<Vector3>();
+        roomGraph = new Graph<Vector3>();
+        doorGraph = new Graph<Vector3>();
 
-        DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
-        DungeonGen.OnEndGeneration += DungeonGen_OnEndGeneration;
+        dungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
+        dungeonGen.OnEndGeneration += DungeonGen_OnEndGeneration;
     }
     void Update()
     {
@@ -36,8 +36,8 @@ public class GraphGenerator : Generator
 
     private void DungeonGen_OnStartGeneration()
     {
-        RoomGraph.ClearGraph();
-        DoorGraph.ClearGraph();
+        roomGraph.ClearGraph();
+        doorGraph.ClearGraph();
         j = 0;
     }
 
@@ -53,19 +53,19 @@ public class GraphGenerator : Generator
 
     public void MakeGraphKeysRoom(int i)
     {
-        Vector3 roomMiddle = new(DoneRooms[i].x + DoneRooms[i].width / 2, 0, DoneRooms[i].y + DoneRooms[i].height / 2);
-        RoomGraph.AddNode(roomMiddle);
+        Vector3 roomMiddle = new(doneRooms[i].x + doneRooms[i].width / 2, 0, doneRooms[i].y + doneRooms[i].height / 2);
+        roomGraph.AddNode(roomMiddle);
     }
 
     public void GetGraphEdgesRoom(int i)
     {
         foreach (var door in Doors)
         {
-            if (AlgorithmsUtils.Intersects(DoneRooms[i], door))
+            if (AlgorithmsUtils.Intersects(doneRooms[i], door))
             {
-                var middleRoom = new Vector3(DoneRooms[i].position.x + DoneRooms[i].width / 2, 0, DoneRooms[i].position.y + DoneRooms[i].height / 2);
+                var middleRoom = new Vector3(doneRooms[i].position.x + doneRooms[i].width / 2, 0, doneRooms[i].position.y + doneRooms[i].height / 2);
                 Vector3 doorMiddle = new(door.x + door.width / 2f, 0, door.y + door.height / 2f);
-                RoomGraph.AddEdge(middleRoom, doorMiddle);
+                roomGraph.AddEdge(middleRoom, doorMiddle);
             }
         }
     }
@@ -73,14 +73,14 @@ public class GraphGenerator : Generator
     public void MakeGraphKeysDoor(int i)
     {
         Vector3 doorMiddle = new(Doors[i].x + Doors[i].width / 2f, 0, Doors[i].y + Doors[i].height / 2f);
-        DoorGraph.AddNode(doorMiddle);
+        doorGraph.AddNode(doorMiddle);
     }
 
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator GenerateGraph()
     {
-        Random.InitState(DungeonGen.seed);
-        //Debug.Log("Current Seed in use = " + dungeonGen.seed);
+        Random.InitState(dungeonGen.Seed);
+        //Debug.Log("Current Seed in use = " + dungeonGen.Seed);
 
         //Main --- Generator script testing
         DispatchOnStartGenerationEvent();
@@ -93,25 +93,25 @@ public class GraphGenerator : Generator
 
     IEnumerator BuildGraph()
     {
-        //Debug.Log("building graph");
-        RoomGraph = new();
-        DoorGraph = new();
+        //Debug.Log("building Graph");
+        roomGraph = new();
+        doorGraph = new();
 
-        for (int i = 0; i < DoneRooms.Count; i++)
+        for (int i = 0; i < doneRooms.Count; i++)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             MakeGraphKeysRoom(i);
         }
 
         for (int i = 0; i < Doors.Count; i++)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             MakeGraphKeysDoor(i);
         }
 
-        for (int i = 0; i < DoneRooms.Count; i++)
+        for (int i = 0; i < doneRooms.Count; i++)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             GetGraphEdgesRoom(i);
         }
 
@@ -125,15 +125,15 @@ public class GraphGenerator : Generator
 
     void DrawAll()
     {
-        if (RoomGraph != null)
+        if (roomGraph != null)
         {
-            if (RoomGraph.GetKeyList() != null && RoomGraph.GetKeyList().Count != 0)
+            if (roomGraph.GetKeyList() != null && roomGraph.GetKeyList().Count != 0)
             {
-                foreach (var node in RoomGraph.GetKeyList())
+                foreach (var node in roomGraph.GetKeyList())
                 {
                     DebugExtension.DebugWireSphere(node, colors[2]);
 
-                    foreach (var value in RoomGraph.GetNeighbors(node))
+                    foreach (var value in roomGraph.GetNeighbors(node))
                     {
                         Debug.DrawLine(node, value, colors[2]);
                     }
@@ -141,9 +141,9 @@ public class GraphGenerator : Generator
             }
         }
 
-        if (DoorGraph.GetKeyList() != null && DoorGraph.GetKeyList().Count != 0)
+        if (doorGraph.GetKeyList() != null && doorGraph.GetKeyList().Count != 0)
         {
-            foreach (var node in DoorGraph.GetKeyList())
+            foreach (var node in doorGraph.GetKeyList())
             {
                 DebugExtension.DebugWireSphere(node, colors[2]);
             }

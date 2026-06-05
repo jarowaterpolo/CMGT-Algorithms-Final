@@ -72,7 +72,7 @@ public class AddWalls : Generator
 
                 SpawnWall(value, new(i + 1, j + 1));
 
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
                 index++;
             }
         }

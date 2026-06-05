@@ -9,12 +9,12 @@ public abstract class Generator : MonoBehaviour
     public event Action OnEndGeneration;
 
     public event Action OnNeededRepeat;
-    public enum SplitType
+    public enum WaitingType
     {
         Instant, Overtime, Space
     }
 
-    public SplitType splitType;
+    public WaitingType waitingType;
     public float splitDelay = 0.05f;
     public Color[] colors = { Color.green, Color.red, Color.cyan, Color.black, new Color(255, 175, 0, 1), Color.blue };
 
@@ -37,14 +37,14 @@ public abstract class Generator : MonoBehaviour
         OnNeededRepeat?.Invoke();
     }
 
-    public IEnumerator CustomWait(SplitType splitType, float splitDelay)
+    public IEnumerator CustomWait(WaitingType splitType, float splitDelay)
     {
         switch (splitType)
         {
-            case SplitType.Overtime:
+            case WaitingType.Overtime:
                 yield return new WaitForSeconds(splitDelay);
                 break;
-            case SplitType.Space:
+            case WaitingType.Space:
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
                 yield return null;
                 break;

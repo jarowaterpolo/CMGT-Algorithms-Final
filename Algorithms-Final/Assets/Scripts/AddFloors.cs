@@ -16,7 +16,9 @@ public class AddFloors : Generator
     [SerializeField]
     private Transform dungeonParent;
 
-    private Vector2Int[] directions =
+    [SerializeField] private bool UseRecursive;
+
+    private Vector2Int[] Directions =
     {
         new(-1,-1),
         new(0,-1),
@@ -51,8 +53,15 @@ public class AddFloors : Generator
     private void addWalls_OnEndGeneration()
     {
         tileMap = tileMapGen.GetTileMap();
-        //StartCoroutine(FloodFill());
-        RecursiveFloodFill();
+
+        if (UseRecursive)
+        {
+            RecursiveFloodFill();
+        }
+        else
+        {
+            StartCoroutine(FloodFill());
+        }
     }
 
     private IEnumerator FloodFill()
@@ -82,7 +91,7 @@ public class AddFloors : Generator
                 }
             }
 
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
 
         DispatchOnEndGenerationEvent();
@@ -97,7 +106,7 @@ public class AddFloors : Generator
         HashSet<Vector2Int> DiscoveredNodes = new();
         DiscoveredNodes.Add(StartNode);
         FloodFillRecursion(DiscoveredNodes, StartNode);
-        Debug.Log("discovered nodes count = " + DiscoveredNodes.Count);
+        Debug.Log("Discovered nodes count = " + DiscoveredNodes.Count);
         DispatchOnEndGenerationEvent();
     }
 
@@ -118,7 +127,7 @@ public class AddFloors : Generator
     {
         List<Vector2Int> neighbors = new();
 
-        foreach (var dir in directions)
+        foreach (var dir in Directions)
         {
             neighbors.Add(pos + dir);
         }

@@ -50,7 +50,7 @@ public class TileMapGraph : Generator
 
     private void Update()
     {
-        Draw();
+        //Draw();
     }
 
     private void AddFloors_OnEndGeneration()
@@ -112,7 +112,7 @@ public class TileMapGraph : Generator
         foreach(var node in nodePositions)
         {
             graphNodes.AddNode(node);
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
     }
 
@@ -132,7 +132,7 @@ public class TileMapGraph : Generator
 
                 graphNodes.AddEdge(node, node + dir);
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
     }
 

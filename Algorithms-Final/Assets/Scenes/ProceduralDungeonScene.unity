@@ -178,7 +178,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75689119}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 10
@@ -297,7 +297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathFinder: {fileID: 1082379063}
-  speed: 5
+  Speed: 5
 --- !u!1 &177746383
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,7 +972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536f0ec165bc1544b9ff06289261a878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -986,6 +986,7 @@ MonoBehaviour:
     y: 0
     width: 128
     height: 64
+  Player: {fileID: 75689124}
   doneRooms: []
   doors: []
   minRoomSize:
@@ -1000,7 +1001,7 @@ MonoBehaviour:
   doorRandomRange: {x: 1, y: 7}
   doorSize: 2
   dungeonDrawHeight: 0
-  seed: 1
+  Seed: 0
   useRandomSeed: 0
 --- !u!114 &1082379052
 MonoBehaviour:
@@ -1014,7 +1015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53f0d6bc6c5fb94cb24c756697e30c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1035,7 +1036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f90d9e95173b64cab0ef47ce34162e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1071,7 +1072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f05149e33f2a3647ac248d0f7f9158c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1096,7 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3a3446c274d06428fa0deeada43158, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1119,7 +1120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ce7160336a646409988fcaa67e3196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.2
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1141,7 +1142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81949ac535315ae4195aca886b8b46ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1165,7 +1166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe877046f119a4e8b0c6c20b3c58cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1205,7 +1206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3abdd8b82a9d5548ba79eddb056dbd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1227,7 +1228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890280d330140845aa154f8ca002d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 1
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1240,6 +1241,7 @@ MonoBehaviour:
   floorPrefabs:
   - {fileID: 107208172493072213, guid: 5b4650b9db0659648b63c848a85a2437, type: 3}
   dungeonParent: {fileID: 65454336}
+  UseRecursive: 0
 --- !u!114 &1082379062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,7 +1254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e4878fca553ca14ab04b93761fad27d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1274,7 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e69e59671a1d94badd2fc78d77c51d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splitType: 0
+  waitingType: 0
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1284,7 +1286,7 @@ MonoBehaviour:
   - {r: 255, g: 175, b: 0, a: 1}
   - {r: 0, g: 0, b: 1, a: 1}
   audioSource: {fileID: 0}
-  path: []
+  Path: []
   algorithm: 3
 --- !u!1 &1466573101
 GameObject:
@@ -1398,7 +1400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1746452695
 MonoBehaviour:
   m_ObjectHideFlags: 0

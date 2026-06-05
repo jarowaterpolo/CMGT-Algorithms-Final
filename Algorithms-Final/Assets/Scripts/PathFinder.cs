@@ -20,17 +20,17 @@ public class PathFinder : Generator
     private Vector3 startNode;
     private Vector3 endNode;
 
-    public List<Vector3> path = new List<Vector3>();
-    HashSet<Vector3> discovered = new HashSet<Vector3>();
+    public List<Vector3> Path = new List<Vector3>();
+    HashSet<Vector3> Discovered = new HashSet<Vector3>();
 
-    private Graph<Vector3> graph;
+    private Graph<Vector3> Graph;
 
     public Algorithms algorithm = Algorithms.BFS;
 
     void Start()
     {
         tileMapGraph = GetComponent<TileMapGraph>();
-        graph = tileMapGraph.graphNodes;
+        Graph = tileMapGraph.graphNodes;
     }
 
     private Vector3 GetClosestNodeToPosition(Vector3 position)
@@ -38,7 +38,7 @@ public class PathFinder : Generator
         Vector3 closestNode = Vector3.zero;
         float closestDistance = Mathf.Infinity;
 
-        foreach (var node in graph.GetKeys())
+        foreach (var node in Graph.GetKeys())
         {
             float dist = (node - position).sqrMagnitude;
 
@@ -79,22 +79,22 @@ public class PathFinder : Generator
                 break;
         }
 
-        path = shortestPath; //Used for drawing the path
+        Path = shortestPath; //Used for drawing the Path
 
         return shortestPath;
     }
 
     List<Vector3> BFS(Vector3 start, Vector3 end)
     {
-        //Use this "discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
-        discovered.Clear();
+        //Use this "Discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
+        Discovered.Clear();
 
         Queue<Vector3> ToDo = new();
         Dictionary<Vector3, Vector3> parentMap = new();
         Vector3 currentNode = start;
 
         ToDo.Enqueue(currentNode);
-        discovered.Add(currentNode);
+        Discovered.Add(currentNode);
 
         while (ToDo.Count > 0)
         {
@@ -105,13 +105,13 @@ public class PathFinder : Generator
                 return ReconstructPath(parentMap, start, end);
             }
 
-            var neighbors = graph.GetNeighbors(currentNode);
+            var neighbors = Graph.GetNeighbors(currentNode);
 
             foreach (Vector3 neighbor in neighbors)
             {
-                if (!discovered.Contains(neighbor))
+                if (!Discovered.Contains(neighbor))
                 {
-                    discovered.Add(neighbor);
+                    Discovered.Add(neighbor);
                     ToDo.Enqueue(neighbor);
                     parentMap[neighbor] = currentNode;
                 }
@@ -119,20 +119,20 @@ public class PathFinder : Generator
 
         }
 
-        return new List<Vector3>(); // No path found
+        return new List<Vector3>(); // No Path found
     }
 
     List<Vector3> DFS(Vector3 start, Vector3 end)
     {
-        //Use this "discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
-        discovered.Clear();
+        //Use this "Discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
+        Discovered.Clear();
 
         Stack<Vector3> ToDo = new();
         Dictionary<Vector3, Vector3> parentMap = new();
         Vector3 currentNode = start;
 
         ToDo.Push(currentNode);
-        discovered.Add(currentNode);
+        Discovered.Add(currentNode);
 
         while (ToDo.Count > 0)
         {
@@ -143,13 +143,13 @@ public class PathFinder : Generator
                 return ReconstructPath(parentMap, start, end);
             }
 
-            var neighbors = graph.GetNeighbors(currentNode);
+            var neighbors = Graph.GetNeighbors(currentNode);
 
             foreach (Vector3 neighbor in neighbors)
             {
-                if (!discovered.Contains(neighbor))
+                if (!Discovered.Contains(neighbor))
                 {
-                    discovered.Add(neighbor);
+                    Discovered.Add(neighbor);
                     ToDo.Push(neighbor);
                     parentMap[neighbor] = currentNode;
                 }
@@ -157,14 +157,14 @@ public class PathFinder : Generator
 
         }
 
-        return new List<Vector3>(); // No path found
+        return new List<Vector3>(); // No Path found
     }
 
 
     public List<Vector3> Dijkstra(Vector3 start, Vector3 end)
     {
-        //Use this "discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
-        discovered.Clear();
+        //Use this "Discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
+        Discovered.Clear();
 
         Dictionary<Vector3, float> costMap = new();
         Dictionary<Vector3, Vector3> parentMap = new();
@@ -172,7 +172,7 @@ public class PathFinder : Generator
 
         costMap[start] = 0;
         ToDo.Add((start, 0));
-        discovered.Add(start);
+        Discovered.Add(start);
 
         while (ToDo.Count > 0)
         {
@@ -186,7 +186,7 @@ public class PathFinder : Generator
                 return ReconstructPath(parentMap, start, end);
             }
 
-            var neighbors = graph.GetNeighbors(currentNode);
+            var neighbors = Graph.GetNeighbors(currentNode);
 
             foreach (Vector3 neighbor in neighbors)
             {
@@ -194,7 +194,7 @@ public class PathFinder : Generator
 
                 if (!costMap.ContainsKey(neighbor) || newCost < costMap[neighbor])
                 {
-                    discovered.Add(neighbor);
+                    Discovered.Add(neighbor);
 
                     costMap[neighbor] = newCost;
                     parentMap[neighbor] = currentNode;
@@ -205,13 +205,13 @@ public class PathFinder : Generator
         }
 
         /* */
-        return new List<Vector3>(); // No path found
+        return new List<Vector3>(); // No Path found
     }
 
     List<Vector3> AStar(Vector3 start, Vector3 end)
     {
-        //Use this "discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
-        discovered.Clear();
+        //Use this "Discovered" list to see the nodes in the visual debugging used on OnDrawGizmos()
+        Discovered.Clear();
 
         Dictionary<Vector3, float> costMap = new();
         Dictionary<Vector3, Vector3> parentMap = new();
@@ -219,7 +219,7 @@ public class PathFinder : Generator
 
         costMap[start] = 0;
         ToDo.Add((start, 0));
-        discovered.Add(start);
+        Discovered.Add(start);
 
         while (ToDo.Count > 0)
         {
@@ -233,7 +233,7 @@ public class PathFinder : Generator
                 return ReconstructPath(parentMap, start, end);
             }
 
-            var neighbors = graph.GetNeighbors(currentNode);
+            var neighbors = Graph.GetNeighbors(currentNode);
 
             foreach (Vector3 neighbor in neighbors)
             {
@@ -241,7 +241,7 @@ public class PathFinder : Generator
 
                 if (!costMap.ContainsKey(neighbor) || newCost < costMap[neighbor])
                 {
-                    discovered.Add(neighbor);
+                    Discovered.Add(neighbor);
 
                     costMap[neighbor] = newCost;
                     parentMap[neighbor] = currentNode;
@@ -252,7 +252,7 @@ public class PathFinder : Generator
         }
 
         /* */
-        return new List<Vector3>(); // No path found
+        return new List<Vector3>(); // No Path found
     }
 
     public float Cost(Vector3 from, Vector3 to)
@@ -289,18 +289,18 @@ public class PathFinder : Generator
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(endNode, .3f);
 
-        if (discovered != null)
+        if (Discovered != null)
         {
-            foreach (var node in discovered)
+            foreach (var node in Discovered)
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(node, .3f);
             }
         }
 
-        if (path != null)
+        if (Path != null)
         {
-            foreach (var node in path)
+            foreach (var node in Path)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(node, .3f);

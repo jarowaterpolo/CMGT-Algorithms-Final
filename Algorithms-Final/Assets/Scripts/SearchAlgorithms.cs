@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class SearchAlgorithms<T>
 {
-    private HashSet<T> DiscoveredNodes = new();
+    private HashSet<T> discoveredNodes = new();
 
     public void BFS(Graph<T> graph, T StartNode, Action<T> visitAction)
     {
-        DiscoveredNodes.Clear();
+        discoveredNodes.Clear();
         Debug.Log("BFS Started:");
 
         Queue<T> ToDo = new();
         Dictionary<T, List<T>> adjacents = new();
 
         ToDo.Enqueue(StartNode);
-        DiscoveredNodes.Add(StartNode);
+        discoveredNodes.Add(StartNode);
 
         while (ToDo.Count > 0)
         {
@@ -28,7 +28,7 @@ public class SearchAlgorithms<T>
 
             foreach (T neighbor in neighbors)
             {
-                if (!DiscoveredNodes.Contains(neighbor))
+                if (!discoveredNodes.Contains(neighbor))
                 {
                     if (!adjacents.ContainsKey(currentNode))
                     {
@@ -37,7 +37,7 @@ public class SearchAlgorithms<T>
 
                     adjacents[currentNode].Add(neighbor);
 
-                    DiscoveredNodes.Add(neighbor);
+                    discoveredNodes.Add(neighbor);
                     ToDo.Enqueue(neighbor);
                 }
             }
@@ -46,14 +46,14 @@ public class SearchAlgorithms<T>
     }
     public (bool allReachable, Dictionary<T,List<T>> Adjacents) BFS_DungeonGeneration(Graph<T> graph, T StartNode, Action<T> visitAction)
     {
-        DiscoveredNodes.Clear();
+        discoveredNodes.Clear();
         Debug.Log("BFS_DungeonGeneration Started:");
 
         Queue<T> ToDo = new();
         Dictionary<T, List<T>> adjacents = new();
 
         ToDo.Enqueue(StartNode);
-        DiscoveredNodes.Add(StartNode);
+        discoveredNodes.Add(StartNode);
 
         while (ToDo.Count > 0)
         {
@@ -65,7 +65,7 @@ public class SearchAlgorithms<T>
 
             foreach (T neighbor in neighbors)
             {
-                if (!DiscoveredNodes.Contains(neighbor))
+                if (!discoveredNodes.Contains(neighbor))
                 {
                     if (!adjacents.ContainsKey(currentNode))
                     {
@@ -74,20 +74,20 @@ public class SearchAlgorithms<T>
 
                     adjacents[currentNode].Add(neighbor);
 
-                    DiscoveredNodes.Add(neighbor);
+                    discoveredNodes.Add(neighbor);
                     ToDo.Enqueue(neighbor);
                 }
             }
 
         }
 
-        bool allNodesReachable = graph.GetKeyList().Count == DiscoveredNodes.Count;
+        bool allNodesReachable = graph.GetKeyList().Count == discoveredNodes.Count;
         return (allNodesReachable, adjacents);
     }
 
     public List<T> BFS_ShortestPathFinder(Graph<T> graph, T[] NodeRoute, Action<T> visitAction)  
     {
-        DiscoveredNodes.Clear();
+        discoveredNodes.Clear();
         Debug.Log("BFS_ShortestPathFinder Started:");
 
         var StartNode = NodeRoute[0];
@@ -98,7 +98,7 @@ public class SearchAlgorithms<T>
         var currentNode = StartNode;
 
         ToDo.Enqueue(currentNode);
-        DiscoveredNodes.Add(currentNode);
+        discoveredNodes.Add(currentNode);
 
         while (ToDo.Count > 0)
         {
@@ -113,9 +113,9 @@ public class SearchAlgorithms<T>
 
             foreach (T neighbor in neighbors)
             {
-                if (!DiscoveredNodes.Contains(neighbor))
+                if (!discoveredNodes.Contains(neighbor))
                 {
-                    DiscoveredNodes.Add(neighbor);
+                    discoveredNodes.Add(neighbor);
                     ToDo.Enqueue(neighbor);
                     parentMap[neighbor] = currentNode;
                 }
@@ -123,7 +123,7 @@ public class SearchAlgorithms<T>
 
         }
 
-        return new List<T>(); // No path found
+        return new List<T>(); // No Path found
     }
 
     List<T> ReconstructPath(Dictionary<T, T> parentMap, T start, T end)

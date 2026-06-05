@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class NewDungeonGenerator : Generator
 {
     public RectInt startRoom;
+    [SerializeField] private Transform Player;
 
     private List<RectInt> toDoRooms = new();
     [HideInInspector]
@@ -29,7 +30,7 @@ public class NewDungeonGenerator : Generator
 
     public float dungeonDrawHeight;
 
-    public int seed;
+    public int Seed;
     public bool useRandomSeed;
 
     private SearchDungeon searchDungeon;
@@ -102,16 +103,16 @@ public class NewDungeonGenerator : Generator
 
         if (useRandomSeed)
         {
-            seed = System.DateTime.Now.GetHashCode();
-            Debug.Log("Random seed used = " + seed);
+            Seed = System.DateTime.Now.GetHashCode();
+            Debug.Log("Random Seed used = " + Seed);
         }
         else
         {
-            Debug.Log("Seed from inspector used = " + seed);
+            Debug.Log("Seed from inspector used = " + Seed);
         }
 
-        Random.InitState(seed);
-        //Debug.Log("Current Seed in use = " + seed);
+        Random.InitState(Seed);
+        //Debug.Log("Current Seed in use = " + Seed);
 
         toDoRooms.Clear();
         doneRooms.Clear();
@@ -127,7 +128,7 @@ public class NewDungeonGenerator : Generator
         //O(log(n))
         while (toDoRooms.Count > 0)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             SplitRandom();
         }
 
@@ -138,18 +139,20 @@ public class NewDungeonGenerator : Generator
             {
                 if (AlgorithmsUtils.Intersect(doneRooms[i], doneRooms[j]).width < 1 && AlgorithmsUtils.Intersect(doneRooms[i], doneRooms[j]).height < 1) continue;
 
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
                 GetOverlaps(i, j);
             }
         }
 
         for (int i = 0; i < Overlaps.Count; i++)
         {
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             PlaceDoors(i);
         }
 
         currentRoom = new();
+
+        Player.position = new(doneRooms[0].position.x + doneRooms[0].width / 2, 1, doneRooms[0].position.y + doneRooms[0].height / 2);
 
         DispatchOnEndGenerationEvent();
     }

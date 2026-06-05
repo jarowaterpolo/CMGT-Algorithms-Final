@@ -76,10 +76,10 @@ public class DebugDrawingBatcher : MonoBehaviour
     /// </remarks>
     public static DebugDrawingBatcher GetInstance(string pName = "default")
     {
-        // Fast path: return existing instance if already created.
+        // Fast Path: return existing instance if already created.
         if (!instances.TryGetValue(pName, out var value))
         {
-            // Lazy creation path: create a new scene object + component.
+            // Lazy creation Path: create a new scene object + component.
             instances[pName] = value = CreateInstance(pName);
 
             // First created instance becomes the root, which is responsible for invoking all batches.

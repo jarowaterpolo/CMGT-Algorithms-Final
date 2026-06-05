@@ -8,7 +8,7 @@ public class FollowPathController : MonoBehaviour
     private PathFinder pathFinder;
 
     [SerializeField]
-    private float speed = 5f;
+    private float Speed = 5f;
 
     private bool isMoving = false;
 
@@ -32,7 +32,7 @@ public class FollowPathController : MonoBehaviour
     {
         if (path == null || path.Count == 0)
         {
-            Debug.Log("No path found");
+            Debug.Log("No Path found");
             yield break;
         }
         isMoving = true;
@@ -42,7 +42,7 @@ public class FollowPathController : MonoBehaviour
             // Move towards the target position
             while (Vector3.Distance(transform.position, target) > 0.1f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * speed);
+                transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * Speed);
                 yield return null;
             }
 

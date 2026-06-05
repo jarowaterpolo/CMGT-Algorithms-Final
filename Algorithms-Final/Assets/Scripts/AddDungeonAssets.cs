@@ -125,7 +125,7 @@ public class AddDungeonAssets : Generator
             {
                 horizontalWallFront.name = "Horizontal_Wall_Front_" + i;
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
 
             spawnPos.z = room.yMax - .5f;
 
@@ -134,7 +134,7 @@ public class AddDungeonAssets : Generator
             {
                 horizontalWallBack.name = "Horizontal_Wall_Back_" + i;
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
 
         for (int i = room.yMin; i < room.yMax; i++)
@@ -146,7 +146,7 @@ public class AddDungeonAssets : Generator
             {
                 verticalWallLeft.name = "Vertical_Wall_Left_" + i;
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
 
             spawnPos.x = room.xMax - .5f;
 
@@ -155,7 +155,7 @@ public class AddDungeonAssets : Generator
             {
                 verticalWallRight.name = "Vertical_Wall_Right_" + i;
             }
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
     }
 
@@ -203,7 +203,7 @@ public class AddDungeonAssets : Generator
                     {
                         floorPiece.name = "Floor_Piece_Door";
                     }
-                    if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                    if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
                 }
             }
             else
@@ -214,7 +214,7 @@ public class AddDungeonAssets : Generator
                 {
                     floorPiece.name = "Floor_Piece_Door";
                 }
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             }
         }
     }
@@ -232,7 +232,7 @@ public class AddDungeonAssets : Generator
                 {
                     floorPiece.name = "Floor_Piece_" + i;
                 }
-                if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+                if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
             }
         }
     }

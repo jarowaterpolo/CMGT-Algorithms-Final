@@ -48,16 +48,16 @@ public class DeleteDoors : Generator
 
             if (!searchDungeon.Adjacents.ContainsKey(doorMiddle))
             {
-                Debug.Log($"removed door {door}");
+                //Debug.Log($"removed door {door}");
                 dungeonGen.doors.Remove(door);
             }
 
-            //if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            //if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
 
         }
 
         yield return graphGen.ReBuildGraph();
         yield return searchDungeon.Search();
-        if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+        if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
     }
 }

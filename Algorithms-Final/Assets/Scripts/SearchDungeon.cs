@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class SearchDungeon : Generator
 {
-    private NewDungeonGenerator DungeonGen;
-    private GraphGenerator GraphGen;
+    private NewDungeonGenerator dungeonGen;
+    private GraphGenerator graphGen;
 
     private SearchAlgorithms<Vector3> searchAlgorithm;
 
@@ -15,7 +15,7 @@ public class SearchDungeon : Generator
     private int j;
 
     [HideInInspector]
-    public Graph<Vector3> RoomGraph;
+    public Graph<Vector3> roomGraph;
 
     [HideInInspector]
     public bool allRoomsReachable;
@@ -25,15 +25,15 @@ public class SearchDungeon : Generator
 
     void Start()
     {
-        GraphGen = GetComponent<GraphGenerator>();
-        DungeonGen = GetComponent<NewDungeonGenerator>();
+        graphGen = GetComponent<GraphGenerator>();
+        dungeonGen = GetComponent<NewDungeonGenerator>();
 
-        RoomGraph = GraphGen.RoomGraph;
+        roomGraph = graphGen.roomGraph;
 
         searchAlgorithm = new();
 
-        DungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
-        GraphGen.OnEndGeneration += GraphGen_OnEndGeneration;
+        dungeonGen.OnStartGeneration += DungeonGen_OnStartGeneration;
+        graphGen.OnEndGeneration += GraphGen_OnEndGeneration;
     }
     private void GraphGen_OnEndGeneration()
     {
@@ -53,7 +53,7 @@ public class SearchDungeon : Generator
     [Button(enabledMode: EButtonEnableMode.Playmode)]
     public IEnumerator SearchDungeonGraph()
     {
-        UnityEngine.Random.InitState(DungeonGen.seed);
+        UnityEngine.Random.InitState(dungeonGen.Seed);
 
         DispatchOnStartGenerationEvent();
         j++;
@@ -67,13 +67,13 @@ public class SearchDungeon : Generator
 
     public IEnumerator Search()
     {
-        RoomGraph = GraphGen.RoomGraph;
-        var FirstRoom = RoomGraph.GetFirstKey();
+        roomGraph = graphGen.roomGraph;
+        var FirstRoom = roomGraph.GetFirstKey();
 
         Action<Vector3> DrawCircleNode = node => DebugExtension.DebugCircle(node /*+ new Vector3(0, 0, 0)*/, colors[5], 1, 3);
 
-        (allRoomsReachable, Adjacents) = searchAlgorithm.BFS_DungeonGeneration(RoomGraph, FirstRoom, DrawCircleNode);
+        (allRoomsReachable, Adjacents) = searchAlgorithm.BFS_DungeonGeneration(roomGraph, FirstRoom, DrawCircleNode);
 
-        if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+        if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
     }
 }

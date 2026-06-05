@@ -61,7 +61,7 @@ public class DeleteRooms : Generator
 
             yield return graphGen.ReBuildGraph();
             yield return searchDungeon.Search();
-            if (splitType != SplitType.Instant) yield return CustomWait(splitType, splitDelay);
+            if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);
         }
 
         DispatchOnEndGenerationEvent();
