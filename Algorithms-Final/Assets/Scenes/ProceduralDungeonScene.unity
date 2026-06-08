@@ -972,8 +972,8 @@ MonoBehaviour:
   startRoom:
     x: 0
     y: 0
-    width: 64
-    height: 32
+    width: 256
+    height: 128
   Player: {fileID: 75689124}
   doneRooms: []
   doors: []
@@ -1154,7 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04fe877046f119a4e8b0c6c20b3c58cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitingType: 0
+  waitingType: 1
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890280d330140845aa154f8ca002d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitingType: 0
+  waitingType: 1
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}
@@ -1264,7 +1264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e69e59671a1d94badd2fc78d77c51d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitingType: 0
+  waitingType: 1
   splitDelay: 0.05
   colors:
   - {r: 0, g: 1, b: 0, a: 1}

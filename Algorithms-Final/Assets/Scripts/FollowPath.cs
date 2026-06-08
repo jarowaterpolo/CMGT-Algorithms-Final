@@ -46,7 +46,7 @@ public class FollowPathController : MonoBehaviour
                 yield return null;
             }
 
-            Debug.Log($"Reached target: {target}");
+            //Debug.Log($"Reached target: {target}");
         }
         isMoving = false;
     }

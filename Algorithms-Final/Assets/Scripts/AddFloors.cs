@@ -88,7 +88,7 @@ public class AddFloors : Generator
                 {
                     DiscoveredNodes.Add(neighbor);
                     ToDo.Enqueue(neighbor);
-                }
+                   }
             }
 
             if (waitingType != WaitingType.Instant) yield return CustomWait(waitingType, splitDelay);

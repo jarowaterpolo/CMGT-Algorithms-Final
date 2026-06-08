@@ -65,7 +65,6 @@
     <Compile Include="Assets\Scripts\DebugDrawingBatcher.cs" />
     <Compile Include="Assets\DebugDrawingExtension\Example\Example.cs" />
     <Compile Include="Assets\Scripts\SearchAlgorithms.cs" />
-    <Compile Include="Assets\Scripts\DungeonGenerator.cs" />
     <Compile Include="Assets\DebugDrawingExtension\DebugExtension.cs" />
     <Compile Include="Assets\Scripts\FollowPath.cs" />
     <Compile Include="Assets\Scripts\AlgorithmsUtils.cs" />
@@ -74,16 +73,17 @@
     <Compile Include="Assets\Scripts\DeleteRooms.cs" />
     <Compile Include="Assets\Scripts\BakeNavMesh.cs" />
     <Compile Include="Assets\Scripts\MouseClickController.cs" />
+    <Compile Include="Assets\Scripts\DungeonGraph\Graph.cs" />
     <Compile Include="Assets\Scripts\DeleteDoors.cs" />
     <Compile Include="Assets\Scripts\SearchDungeon.cs" />
     <Compile Include="Assets\Scripts\Cam.cs" />
     <Compile Include="Assets\Scripts\Generator.cs" />
     <Compile Include="Assets\Scripts\AddWalls.cs" />
-    <Compile Include="Assets\Scripts\NewDungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\DungeonSplitting\NewDungeonGenerator.cs" />
+    <Compile Include="Assets\Scripts\DungeonGraph\GraphGenerator.cs" />
     <Compile Include="Assets\Scripts\TileMapGenerator.cs" />
-    <Compile Include="Assets\Scripts\GraphGenerator.cs" />
-    <Compile Include="Assets\Scripts\Graph.cs" />
     <Compile Include="Assets\Scripts\AddDungeonAssets.cs" />
+    <Compile Include="Assets\Scripts\DungeonSplitting\DungeonGenerator.cs" />
     <Compile Include="Assets\Scripts\HelloDebugDrawing.cs" />
   </ItemGroup>
   <ItemGroup>
